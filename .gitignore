@@ -1,0 +1,3 @@
+# installed packages, and everything saved by a local run (sign-ups, posts, uploaded files)
+node_modules/
+data/

@@ -1,0 +1,16 @@
+{
+  "name": "icy-nus",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ICY NUS: Indonesian Catholic Youth at NUS — cell groups, events, Q&A and prayer requests",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "pg": "^8.11.0"
+  }
+}

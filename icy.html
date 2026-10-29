@@ -1,0 +1,1269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICY NUS · Indonesian Catholic Youth</title>
+<meta name="description" content="ICY NUS: the Indonesian Catholic Youth community at NUS, part of AmoreDio under KKIS. Cell Group, events, Q&amp;A and prayer requests.">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700&amp;display=swap">
+<style>
+:root{
+  --bg:#050505; --panel:#151515; --raised:#232323; --raised-2:#2E2E2E; --muted:#A3A3A8; --dim:#8A8A90;
+  --lime:#E4F65A; --lav:#B5A6F5; --violet:#5A41D8; --pink:#F9C9F4; --pink-ink:#8F1480;
+  --sky:#BFE0EA; --peach:#FFD9A8; --mint:#C8F0D0;
+  --ink:#0B0B0B; --ink-2:#3F3F48; --ink-3:#5C5C66; --cell:#EFEDF5; --hair:#E4E3EA;
+  --grad:radial-gradient(110% 80% at 0% 0%,var(--lime) 0%,transparent 58%),linear-gradient(180deg,#D7E8EA 0%,#CFDCF1 55%,#C4B5F4 100%);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#fff;font-family:"Red Hat Display","Segoe UI",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}
+h1{font-size:40px;font-weight:600;line-height:1.1;letter-spacing:-.01em;overflow-wrap:anywhere}
+h2{font-size:22px;font-weight:600;line-height:1.2;overflow-wrap:anywhere}
+h3{font-size:16px;font-weight:600}
+a{color:inherit}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0;padding:0;background:none;color:inherit}
+button:disabled{cursor:default;opacity:.55}
+:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+.dark :focus-visible{outline-color:var(--lime)}
+[hidden]{display:none!important}
+svg{flex:none}
+
+#app{max-width:1360px;margin:0 auto;min-height:100vh;padding:16px;display:flex;flex-direction:column;gap:12px}
+
+/* ---------- shared pieces ---------- */
+.panel{background:var(--panel);border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.main{border-radius:28px;padding:28px;color:var(--ink);background:var(--grad);display:flex;flex-direction:column;gap:22px;min-width:0}
+.sub{font-size:14px;line-height:1.55;color:var(--muted)}
+.sub-ink{font-size:15px;line-height:1.55;color:var(--ink-2)}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--lime)}
+.row{display:flex;align-items:center;gap:8px}
+.row.end{justify-content:flex-end}
+.grow{flex:1 1 auto;min-width:0}
+.divider{height:1px;background:#262626;margin:2px 0}
+.count{min-width:28px;height:28px;padding:0 8px;border-radius:14px;background:var(--raised);display:inline-grid;place-items:center;font-size:13px;font-weight:600}
+.tag{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 11px;border-radius:9px;background:var(--ink);color:#fff;font-size:12px;font-weight:700;white-space:nowrap;align-self:flex-start}
+.tag.pink{background:var(--pink);color:var(--pink-ink)}
+.tag.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--lime)}
+.btn-lime,.btn-black,.btn-white{min-height:48px;padding:0 22px;border-radius:14px;font-size:15px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap}
+.btn-lime{background:var(--lime);color:var(--ink)}
+.btn-lime:hover{background:#EEFB7E}
+.btn-black{background:var(--ink);color:#fff}
+.btn-black:hover{background:#2A2A2A}
+.btn-white{background:#fff;color:var(--ink)}
+.btn-white:hover{background:#F3F2F8}
+.chip-btn{height:40px;padding:0 14px;border-radius:20px;background:var(--raised);color:#fff;font-size:13px;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.chip-btn:hover{background:var(--raised-2)}
+.chip-lt{height:40px;padding:0 16px;border-radius:20px;background:rgba(255,255,255,.7);color:var(--ink);font-size:14px;font-weight:600;white-space:nowrap}
+.chip-lt:hover{background:#fff}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.icon-btn:hover{background:var(--raised)}
+.icon-btn.ink{color:var(--ink)}
+.icon-btn.ink:hover{background:rgba(11,11,11,.08)}
+.x{width:36px;height:36px;flex:none;border-radius:50%;color:var(--muted);display:grid;place-items:center}
+.x:hover{background:var(--raised);color:#fff}
+.lt .x{color:var(--ink-3)}
+.lt .x:hover{background:rgba(11,11,11,.07);color:var(--ink)}
+.avatar{width:36px;height:36px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--ink)}
+.avatar.sm{width:26px;height:26px;font-size:11px}
+.avatar.anon{background:#D9D7E3;color:var(--ink-3)}
+.empty{background:rgba(255,255,255,.55);border-radius:24px;padding:40px 24px;text-align:center;font-size:15px;line-height:1.55;color:var(--ink-2)}
+.alert{background:#fff;border-radius:14px;padding:12px 16px;font-size:14px;font-weight:600;color:#9B1C1C}
+
+/* segmented controls: light on the gradient, dark in panels */
+.seg{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(11,11,11,.1);align-self:flex-start;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button,.seg a{min-height:40px;padding:0 18px;border-radius:11px;font-size:15px;font-weight:500;color:var(--ink);white-space:nowrap;display:inline-flex;align-items:center;text-decoration:none}
+.seg .on{background:#fff}
+.seg.dark{background:var(--raised)}
+.seg.dark a{min-height:44px;padding:0 16px;font-size:14px;font-weight:600;color:#fff}
+.seg.dark a:hover:not(.on){background:var(--raised-2)}
+.seg.dark .on{color:var(--ink)}
+
+/* forms: dark inputs in panels and dialogs, light ones on white cards */
+.form{display:flex;flex-direction:column;gap:14px}
+.lbl{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--muted);min-width:0}
+.lbl .opt{font-weight:500;color:var(--dim)}
+.dark input:not([type=checkbox]):not([type=radio]),.dark textarea{width:100%;min-width:0;padding:12px 14px;border:1px solid #2F2F2F;border-radius:14px;background:#0D0D0D;color:#fff;font-size:15px;color-scheme:dark}
+.dark input:not([type=checkbox]):not([type=radio]){height:46px;padding:0 14px}
+.dark textarea{resize:vertical;min-height:110px;line-height:1.5}
+.dark input::placeholder,.dark textarea::placeholder{color:var(--dim)}
+.lt input,.lt textarea{width:100%;min-width:0;padding:10px 12px;border:1px solid var(--hair);border-radius:12px;background:#FAFAFC;color:var(--ink);font-size:14px}
+.lt textarea{resize:vertical;min-height:72px;line-height:1.5}
+.check{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.4;color:#fff;cursor:pointer}
+.check input{width:20px;height:20px;margin:0;flex:none;accent-color:var(--lime)}
+.check:has(input:disabled){color:var(--dim);cursor:default}
+.check:has(input:not(:disabled)) .needs{display:none}
+.hint{font-size:12px;color:var(--dim);line-height:1.45}
+.err{font-size:13px;font-weight:600;color:#FFB4A8}
+.err:empty{display:none}
+
+/* two-column pages: a dark side column next to the gradient panel, as in Overlap */
+.cols{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
+.side{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.cols>.main{flex:999 1 560px}
+.sticky{position:sticky;top:16px}
+.head{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+.title-wrap{min-width:0;display:flex;flex-direction:column;gap:10px}
+.head .title-wrap{flex:1 1 320px}
+
+/* ---------- top bar ---------- */
+.top{background:var(--panel);border-radius:24px;padding:12px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;min-width:0;padding-right:6px}
+.logo{width:52px;height:52px;flex:none;border-radius:16px;background:var(--lav);display:grid;place-items:center}
+.logo img{width:40px;height:40px;display:block}
+.brand-text{display:flex;flex-direction:column;min-width:0}
+.brand-text strong{font-size:18px;font-weight:700;letter-spacing:.01em}
+.brand-text span{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav{flex:1 1 auto;min-width:0;display:flex;justify-content:center}
+.nav .seg{align-self:auto}
+.nav .short{display:none}
+.amore{min-height:52px;border-radius:16px;padding:0 18px}
+.amore small{font-weight:500;opacity:.7}
+.banner{background:#2A1712;color:#FFD4C8;border-radius:16px;padding:12px 16px;font-size:14px;font-weight:600}
+
+/* ---------- home ---------- */
+.hero{flex-direction:row;align-items:center;gap:28px;padding:40px}
+.hero-text{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:18px;max-width:720px}
+.hero h1{font-size:52px}
+.lead{font-size:18px;line-height:1.6;color:var(--ink-2)}
+.lead a{color:var(--violet);font-weight:600}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.hero-logo{width:min(300px,30vw);height:auto;flex:none;margin:0 auto}
+.lineage{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.lineage span,.lineage a{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:10px;background:rgba(255,255,255,.6);text-decoration:none;color:var(--ink)}
+.lineage a:hover{background:#fff}
+.lineage .me{background:var(--ink);color:#fff}
+.lineage i{font-style:normal;color:var(--ink-3)}
+.scroll-hint{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink-2);padding:6px 0}
+.scroll-hint:hover{color:var(--ink)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.tile{background:var(--panel);border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:12px;color:#fff;text-decoration:none;min-height:220px}
+.tile:hover{background:#1B1B1B}
+.tile-ic{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;color:var(--ink)}
+.tile h2{font-size:20px}
+.tile p{font-size:14px;line-height:1.5;color:var(--muted)}
+.tile .big{font-size:15px;font-weight:600;color:#fff;line-height:1.45}
+.tile .go{margin-top:auto;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--lime)}
+.prayer{border-radius:28px;padding:40px 28px;color:var(--ink);display:flex;flex-direction:column;gap:24px;scroll-margin-top:16px;
+  background:radial-gradient(45% 35% at 10% 12%,rgba(255,255,255,.8),transparent 70%),radial-gradient(40% 30% at 92% 88%,rgba(255,255,255,.75),transparent 70%),radial-gradient(35% 25% at 70% 8%,rgba(255,255,255,.45),transparent 70%),linear-gradient(180deg,#C6D8EE 0%,#9FBADB 100%)}
+.prayer-head{display:flex;flex-direction:column;gap:10px;text-align:center;align-items:center}
+.prayer-head p{max-width:560px}
+.prayer-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;max-width:1080px;width:100%;margin:0 auto}
+.pcard{background:#fff;border-radius:28px;padding:30px 30px 34px;display:flex;flex-direction:column;gap:14px;box-shadow:0 10px 30px rgba(40,70,120,.12)}
+.pcard h3{font-size:24px;font-weight:700;text-align:center;margin-bottom:4px}
+.pcard p{font-size:17px;line-height:1.55;color:#1A1A1F}
+.pcard .resp{font-weight:700;color:var(--ink);background:var(--cell);border-radius:12px;padding:10px 14px}
+.pcard .resp span{font-weight:500;color:var(--ink-3)}
+.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;padding:18px 8px 8px;font-size:13px;color:var(--dim);text-align:center}
+.foot img{width:34px;height:auto;opacity:.85}
+.foot a{color:var(--muted)}
+
+/* ---------- cell group ---------- */
+.about{display:flex;flex-direction:column;gap:12px;max-width:760px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:12px;background:rgba(255,255,255,.65);font-size:14px;font-weight:600}
+.pill i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.calcard{background:#fff;border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.cal-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.cal-top strong{font-size:20px;font-weight:600;min-width:150px}
+.cal-top .seg{margin-left:auto}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1px solid var(--hair);border-left:1px solid var(--hair);border-radius:14px;overflow:hidden}
+.mdow{padding:8px 4px;text-align:center;font-size:12px;font-weight:700;color:var(--ink-3);border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);background:#FAFAFC}
+.mcell{min-height:108px;padding:6px;display:flex;flex-direction:column;align-items:stretch;gap:4px;text-align:left;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);background:#fff;color:var(--ink);min-width:0}
+.mcell.out{background:#FAFAFC;color:#9A9AA3}
+.mcell .num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:600}
+.mcell.today .num{background:var(--violet);color:#fff}
+button.mcell:hover{background:#F6F4FD}
+.mcell.sel{box-shadow:inset 0 0 0 2px var(--ink)}
+.cchip{display:block;border-radius:6px;padding:3px 7px;font-size:12px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cchip.dinner{background:var(--peach)}
+.cchip.cg{background:var(--lav)}
+.cchip.off{background:var(--cell);color:var(--ink-3);text-decoration:line-through}
+.mcount{font-size:11px;font-weight:600;color:var(--ink-3);padding-left:2px}
+.lrows{display:flex;flex-direction:column;gap:8px}
+.lrow{display:flex;align-items:center;gap:14px;padding:10px 14px 10px 10px;border-radius:18px;background:#F6F5FA;color:var(--ink);text-align:left;width:100%}
+.lrow:hover{background:#EFEDF8}
+.lrow.sel{box-shadow:inset 0 0 0 2px var(--ink);background:#fff}
+.lrow.past{opacity:.6}
+.ldate{width:58px;height:64px;flex:none;border-radius:14px;background:var(--lav);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.ldate small{font-size:11px;font-weight:700;letter-spacing:.04em}
+.ldate b{font-size:22px;font-weight:700}
+.linfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.linfo strong{font-size:15px}
+.linfo span{font-size:13px;color:var(--ink-3)}
+.lmeta{font-size:13px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+.block h2{font-size:24px}
+.facts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.facts li{display:flex;align-items:center;gap:12px}
+.fact-ic{width:44px;height:44px;flex:none;border-radius:14px;display:grid;place-items:center;color:var(--ink)}
+.facts small{display:block;font-size:12px;color:var(--muted)}
+.facts strong{font-size:16px;font-weight:600}
+.facts .tba{color:var(--muted);font-style:italic;font-weight:500}
+.off-note{background:#2B2222;color:#FFC9C0;border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600}
+.ticks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tick{position:relative;display:flex;align-items:center;gap:10px;min-height:60px;padding:10px 12px;border-radius:16px;background:var(--raised);cursor:pointer}
+.tick:hover{background:var(--raised-2)}
+.tick input{position:absolute;opacity:0;width:1px;height:1px}
+.tick .box{width:24px;height:24px;flex:none;border-radius:8px;border:2px solid #555;display:grid;place-items:center;color:transparent}
+.tick strong{display:block;font-size:14px}
+.tick small{font-size:12px;color:var(--muted)}
+.tick:has(input:checked){background:var(--lime);color:var(--ink)}
+.tick:has(input:checked) .box{background:var(--ink);border-color:var(--ink);color:var(--lime)}
+.tick:has(input:checked) small{color:var(--ink-2)}
+.tick:has(input:focus-visible){outline:2px solid var(--lime);outline-offset:2px}
+.tick:has(input:disabled){opacity:.45;cursor:default}
+.who-list{display:flex;flex-direction:column;gap:8px}
+.who-list h4{margin:0;font-size:13px;font-weight:600;color:var(--muted)}
+.names{display:flex;flex-wrap:wrap;gap:6px}
+.name{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px 0 3px;border-radius:16px;background:var(--raised);font-size:13px;font-weight:500}
+.name.me{background:#33361A;color:var(--lime)}
+.docs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.docs li{display:flex;align-items:center;gap:10px;padding:8px 6px 8px 8px;border-radius:14px;background:var(--raised)}
+.doc-ic{width:40px;height:40px;flex:none;border-radius:11px;display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--ink)}
+.doc-text{flex:1;min-width:0;display:flex;flex-direction:column}
+.doc-text a{font-size:14px;font-weight:600;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc-text a:hover{text-decoration:underline}
+.doc-text small{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.view{height:32px;padding:0 12px;border-radius:16px;background:#fff;color:var(--ink);font-size:13px;font-weight:600;display:inline-flex;align-items:center;text-decoration:none}
+.view:hover{background:var(--lime)}
+.cg-edit{display:flex;flex-direction:column;gap:12px}
+.frow{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+
+/* ---------- events ---------- */
+.cal-head{display:flex;align-items:center;gap:6px}
+.cal-head strong{flex:1;font-size:17px;font-weight:600}
+.cal-dow,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.cal-dow span{text-align:center;font-size:13px;font-weight:600}
+.day{position:relative;height:40px;border-radius:20px;font-size:14px;font-weight:500;color:#fff}
+.day.out{color:var(--dim)}
+.day.today{box-shadow:inset 0 0 0 1px var(--lime)}
+.day:hover:not(:disabled){background:var(--raised)}
+.day:disabled{opacity:1;cursor:default}
+.day.has::after{content:"";position:absolute;left:50%;bottom:5px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--lime)}
+.day.on{background:var(--lime);color:var(--ink);box-shadow:none}
+.day.on::after{background:var(--ink)}
+.evlist{display:flex;flex-direction:column;gap:12px;max-width:900px}
+.evcard{display:flex;align-items:stretch;border-radius:22px;overflow:hidden;color:var(--ink);box-shadow:0 1px 0 rgba(11,11,11,.06)}
+.c-lime{background:var(--lime)} .c-lav{background:var(--lav)} .c-pink{background:var(--pink)}
+.c-sky{background:var(--sky)} .c-peach{background:var(--peach)} .c-mint{background:var(--mint)}
+.evc-body{flex:1;min-width:0;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.evc-top{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.evc-top span:last-child{white-space:nowrap}
+.evc-title{font-size:21px;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.evc-desc{font-size:15px;line-height:1.55;color:#26262E;white-space:pre-wrap;overflow-wrap:anywhere}
+.evc-desc.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.more{align-self:flex-start;font-size:13px;font-weight:700;text-decoration:underline;color:var(--ink-2)}
+.evc-loc{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.evc-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px}
+.join{height:40px;padding:0 16px;border-radius:20px;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.join:hover{background:#2A2A2A}
+.join.on{background:#fff;color:var(--ink)}
+.join.on:hover{background:#F3F2F8}
+.going{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 12px 0 6px;border-radius:20px;background:rgba(255,255,255,.55);font-size:14px;font-weight:600;color:var(--ink)}
+.going:hover{background:rgba(255,255,255,.85)}
+.stack{display:inline-flex}
+.stack .avatar{box-shadow:0 0 0 2px #fff}
+.stack .avatar+.avatar{margin-left:-8px}
+.nobody{font-size:13px;font-weight:500;color:var(--ink-2)}
+.evc-tools{margin-left:auto;display:flex;gap:2px}
+.ic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
+.ic:hover{background:rgba(255,255,255,.6)}
+.evc-pic{flex:0 0 220px;display:block;background:rgba(255,255,255,.4)}
+.evc-pic img{width:100%;height:100%;min-height:180px;object-fit:cover;display:block}
+.filter{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+
+/* ---------- forums ---------- */
+.notes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.notes li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;background:var(--raised);font-size:14px;line-height:1.45;color:#E6E6EA}
+.notes svg{margin-top:1px;color:var(--lime)}
+.notes strong{color:#fff}
+.link-muted{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.link-muted:hover{color:#fff}
+.feed{display:flex;flex-direction:column;gap:12px;max-width:900px}
+.post{background:#fff;border-radius:22px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.post-head{display:flex;align-items:center;gap:10px}
+.post-head .who{flex:1;min-width:0;display:flex;flex-direction:column}
+.post-head strong{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.post-head .when{font-size:12px;color:var(--ink-3)}
+.post-text{font-size:16px;line-height:1.6;color:#1A1A1F;white-space:pre-wrap;overflow-wrap:anywhere}
+.replies{list-style:none;margin:0;padding:0 0 0 14px;border-left:3px solid var(--cell);display:flex;flex-direction:column;gap:12px}
+.replies li{display:flex;flex-direction:column;gap:4px}
+.reply-head{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3)}
+.reply-head strong{color:var(--ink);font-weight:600}
+.replies p{font-size:15px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.reply-form{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:16px;background:#F6F5FA}
+.reply-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.reply-row input{flex:1 1 180px}
+.link-btn{align-self:flex-start;font-size:14px;font-weight:600;color:var(--violet);padding:4px 0}
+.link-btn:hover{text-decoration:underline}
+.btn-sm{height:38px;padding:0 16px;border-radius:12px;background:var(--ink);color:#fff;font-size:14px;font-weight:600}
+.btn-sm:hover{background:#2A2A2A}
+.btn-sm.ghost{background:transparent;color:var(--ink-2)}
+.btn-sm.ghost:hover{background:rgba(11,11,11,.06)}
+.post-foot{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.pray{height:40px;padding:0 16px;border-radius:20px;background:var(--cell);color:var(--ink);font-size:14px;font-weight:600}
+.pray:hover{background:#E4E1F1}
+.pray.on{background:var(--violet);color:#fff}
+.pray-count{font-size:13px;color:var(--ink-3)}
+
+/* ---------- dialog, popover, toast ---------- */
+dialog.dlg{width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:0;border:0;border-radius:24px;background:var(--panel);color:#fff;overflow:auto}
+dialog.dlg::backdrop{background:rgba(5,5,5,.65)}
+.dform{padding:24px;display:flex;flex-direction:column;gap:14px}
+.picbox{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.picbox img{width:120px;height:84px;object-fit:cover;border-radius:12px;display:block}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatches label{cursor:pointer}
+.swatches input{position:absolute;opacity:0;width:1px;height:1px}
+.swatches span{width:36px;height:36px;border-radius:50%;display:block;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.swatches input:checked+span{box-shadow:0 0 0 3px var(--panel),0 0 0 5px #fff}
+.swatches input:focus-visible+span{outline:2px solid var(--lime);outline-offset:4px}
+.pop{position:fixed;z-index:20;width:230px;padding:14px 16px;background:#fff;color:var(--ink);border-radius:16px;box-shadow:0 12px 32px rgba(11,11,11,.22),0 0 0 1px rgba(11,11,11,.06);pointer-events:none;display:flex;flex-direction:column;gap:8px}
+.pop-title{font-size:14px;font-weight:700}
+.pop-row{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px}
+.pop-row span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pop-more{font-size:12px;color:var(--ink-3)}
+#toast{position:fixed;left:50%;bottom:24px;z-index:30;max-width:calc(100vw - 32px);transform:translate(-50%,16px);background:#fff;color:var(--ink);padding:12px 18px;border-radius:14px;font-size:14px;font-weight:600;box-shadow:0 8px 30px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (max-width:1060px){
+  .top{flex-wrap:wrap}
+  .brand{flex:1 1 auto}
+  .nav{order:3;flex:1 1 100%;justify-content:flex-start}
+  .nav .seg{width:100%}
+  .nav .seg a{flex:1 0 auto;justify-content:center}
+}
+@media (max-width:923px){
+  .cols{flex-direction:column;align-items:stretch}
+  .cols>*{flex:1 1 auto}
+  .cols.main-first>.main{order:1}
+  .cols.main-first>.side{order:2}
+  .sticky{position:static}
+  .hero{flex-direction:column-reverse;align-items:stretch;padding:28px}
+  .hero-logo{width:180px}
+}
+@media (max-width:600px){
+  #app{padding:10px;gap:10px}
+  .main{padding:18px;border-radius:22px}
+  .hero{padding:22px 18px}
+  h1{font-size:30px}
+  .hero h1{font-size:34px}
+  .lead{font-size:16px}
+  .brand{flex:1 1 0;gap:10px;padding-right:0}
+  .brand-text span{white-space:normal}
+  .logo{width:44px;height:44px;border-radius:14px}
+  .logo img{width:34px;height:34px}
+  .amore{min-height:44px;padding:0 14px}
+  .amore small{display:none}
+  .nav .seg a{padding:0 10px}
+  .nav .full{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .nav .short{display:inline}
+  .prayer{padding:28px 14px}
+  .pcard{padding:24px 20px}
+  .pcard p{font-size:16px}
+  .calcard{padding:12px}
+  .mcell{min-height:64px;padding:4px;gap:3px}
+  .mcell .num{width:24px;height:24px;font-size:12px}
+  .cchip{height:6px;padding:0;font-size:0}
+  .mcount{display:none}
+  .evcard{flex-direction:column-reverse}
+  .evc-pic{flex:none}
+  .evc-pic img{min-height:0;height:170px}
+  .ticks{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}#toast{transition:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<dialog id="dlg" class="dlg dark" aria-label="Form"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="pop" class="pop" aria-hidden="true" hidden></div>
+<input type="file" id="doc-file" class="sr" tabindex="-1" aria-hidden="true">
+<input type="file" id="pic-file" class="sr" tabindex="-1" aria-hidden="true" accept="image/*">
+<noscript><p style="padding:24px">ICY NUS needs JavaScript to run.</p></noscript>
+<script>
+(function () {
+'use strict';
+
+var DOW = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+var MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+var AVATAR = ['#E4F65A', '#B5A6F5', '#BFE0EA', '#F9C9F4', '#FFD9A8', '#C8F0D0'];
+var COLORS = [['lime', '#E4F65A'], ['lav', '#B5A6F5'], ['pink', '#F9C9F4'], ['sky', '#BFE0EA'], ['peach', '#FFD9A8'], ['mint', '#C8F0D0']];
+var AMOREDIO = 'https://cg.amoredio.org/';
+var AMOREDIO_QA = 'https://cg.amoredio.org/contact/#question-answers';
+var MAX_FILE = 10 * 1024 * 1024;
+var PAGES = [['home', 'Home'], ['cg', 'Cell Group', 'CG'], ['events', 'Events'], ['qna', 'Q&A'], ['prayer', 'Prayer Requests', 'Prayer']]; // id, label, label on phones
+function svg(d, size) { return '<svg aria-hidden="true" width="' + (size || 20) + '" height="' + (size || 20) + '" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>'; }
+var ICON = {
+  plus: svg('<path d="M10 4v12M4 10h12"/>'),
+  left: svg('<path d="M12 5l-5 5 5 5"/>'),
+  right: svg('<path d="M8 5l5 5-5 5"/>'),
+  down: svg('<path d="M10 4v12M5 11l5 5 5-5"/>', 18),
+  arrow: svg('<path d="M4 10h12M11 5l5 5-5 5"/>', 18),
+  ext: svg('<path d="M8 5H5v10h10v-3M11 4h5v5M16 4l-7 7"/>', 16),
+  x: svg('<path d="M5 5l10 10M15 5L5 15"/>', 18),
+  check: svg('<path d="M4.5 10.5l3.5 3.5 7.5-8"/>', 18),
+  edit: svg('<path d="M4 16h3l8.5-8.5-3-3L4 13v3zM11 6l3 3"/>', 18),
+  trash: svg('<path d="M4 6h12M8 6V4h4v2M6 6l.8 10h6.4L14 6"/>', 18),
+  upload: svg('<path d="M10 13V4M6 8l4-4 4 4M4 16h12"/>', 18),
+  pin: svg('<path d="M10 17.5s5-4.9 5-8.7a5 5 0 0 0-10 0c0 3.8 5 8.7 5 8.7z"/><circle cx="10" cy="8.8" r="1.8"/>', 18),
+  dinner: svg('<path d="M6 3v5a2 2 0 0 0 4 0V3M8 3v14M14.5 17V3c-1.6.8-2.5 2.8-2.5 5.5S13 11 14.5 11"/>'),
+  cross: svg('<path d="M10 3v14M5 7.5h10"/>'),
+  calendar: svg('<rect x="3" y="4.5" width="14" height="12.5" rx="2.5"/><path d="M3 8.5h14M7 3v3M13 3v3"/>'),
+  people: svg('<circle cx="7.5" cy="7" r="2.8"/><path d="M2.5 16.5c.5-2.9 2.5-4.4 5-4.4s4.5 1.5 5 4.4"/><circle cx="14" cy="7.6" r="2.2"/><path d="M14 12.2c1.9.2 3.1 1.6 3.5 4"/>'),
+  chat: svg('<path d="M4 4.5h12v8.5H9.5L5.5 16v-3H4z"/>'),
+  question: svg('<circle cx="10" cy="10" r="7"/><path d="M8 8a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2v.5M10 14.2v.1"/>'),
+  heart: svg('<path d="M10 16s-6-3.6-6-8a3.3 3.3 0 0 1 6-2 3.3 3.3 0 0 1 6 2c0 4.4-6 8-6 8z"/>'),
+  anon: svg('<path d="M3 3l14 14M8.4 5.2A7.6 7.6 0 0 1 10 5c4.4 0 7 5 7 5a12.6 12.6 0 0 1-2.2 2.8M6 6.6C4 8 3 10 3 10s2.6 5 7 5a7 7 0 0 0 3.2-.8"/>'),
+  send: svg('<path d="M3.5 10l13-6-4.5 13-2.5-5.5z"/>', 18)
+};
+
+/* ---------- the AmoreDio Prayer, as printed on the community's prayer card ---------- */
+var PRAYER = [
+  { title: 'AmoreDio Prayer (1/2)', parts: [
+    ['p', 'Thank You God for calling us into AmoreDio, a home where we can grow in Your love and follow You as disciples. We pray O Lord:'],
+    ['p', 'That You open our eyes to see You in our everyday life.'],
+    ['r', 'Jesus, deepen our faith'],
+    ['p', 'That You give us the grace to encounter You personally.'],
+    ['p', 'That You awaken in us the desire to grow and remain in a personal relationship with You.'],
+    ['p', 'That You lead us to receive Your grace more faithfully through the Sacraments.'],
+    ['p', 'That You teach us to know You, listen to You, and speak with You in prayer.'],
+    ['p', 'That You stir in us a hunger to know You more through Your word.'],
+    ['p', 'That You give us the desire to search for truth through the teachings of the Church.'],
+    ['p', 'That You give us the humility to accept what the Church teaches as truth.']
+  ] },
+  { title: 'AmoreDio Prayer (2/2)', parts: [
+    ['p', 'That You give us courage to commit to following You in thoughts, words, and actions.'],
+    ['p', 'That You ignite a fiery passion in our hearts to build Your kingdom here on Earth.'],
+    ['p', 'That we readily accept your invitations like Mother Mary did.'],
+    ['r', 'Jesus, teach us to love like You'],
+    ['p', 'That we warmly welcome new people into our community.'],
+    ['p', 'That we treat each person in our community as brothers and sisters in Christ.'],
+    ['p', 'That we form friendships that can help us enter heaven together.'],
+    ['p', 'That we treat each other compassionately.'],
+    ['p', 'That we humble ourselves to listen and learn from one another.'],
+    ['p', 'That we learn to forgive one another as You have forgiven us.'],
+    ['p', 'That we delight in one another as gifts from God and find joy in journeying together.'],
+    ['p', 'That we use our talents to serve one another and glorify You.']
+  ] }
+];
+
+var app = document.getElementById('app'), dlg = document.getElementById('dlg'), pop = document.getElementById('pop');
+var docFile = document.getElementById('doc-file'), picFile = document.getElementById('pic-file');
+var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+var same = function (a, b) { return String(a).trim().toLowerCase() === String(b).trim().toLowerCase(); };
+
+/* ---------- this browser's own things: your name, keys to posts you made, a random id for "praying" ---------- */
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+var postKeys = (function () { try { var o = JSON.parse(lsGet('icy.keys') || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } })();
+function keepKey(id, key) { postKeys[id] = key; lsSet('icy.keys', JSON.stringify(postKeys)); }
+var client = lsGet('icy.client');
+if (!client) { client = Math.random().toString(36).slice(2) + Date.now().toString(36); lsSet('icy.client', client); }
+
+/* ---------- dates ---------- */
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function dkey(y, m, d) { return y + '-' + pad(m + 1) + '-' + pad(d); }
+function parseKey(k) { var p = k.split('-'); return { y: +p[0], m: +p[1] - 1, d: +p[2] }; }
+function addDays(k, n) { var p = parseKey(k), t = new Date(Date.UTC(p.y, p.m, p.d + n)); return dkey(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate()); }
+function dowOf(k) { var p = parseKey(k); return new Date(Date.UTC(p.y, p.m, p.d)).getUTCDay(); }
+function todayKey() { var n = new Date(); return dkey(n.getFullYear(), n.getMonth(), n.getDate()); }
+function nextThursday(k) { return addDays(k, (4 - dowOf(k) + 7) % 7); }
+function daysIn(y, m) { return new Date(Date.UTC(y, m + 1, 0)).getUTCDate(); }
+function yearSuffix(y) { return y !== new Date().getFullYear() ? ' ' + y : ''; }
+function longDate(k) { var p = parseKey(k); return DOW[dowOf(k)] + ' ' + p.d + ' ' + MON[p.m] + yearSuffix(p.y); }
+function dayMon(k) { var p = parseKey(k); return p.d + ' ' + MON[p.m].slice(0, 3) + yearSuffix(p.y); }
+function fmtTime(t) { if (!t) return ''; var h = +t.slice(0, 2), m = t.slice(3); return (h % 12 || 12) + ':' + m + (h < 12 ? ' AM' : ' PM'); }
+function shortTime(t) { var h = +t.slice(0, 2), m = t.slice(3); return (h % 12 || 12) + (m === '00' ? '' : ':' + m) + (h < 12 ? ' AM' : ' PM'); }
+function ago(ms) {
+  var s = (Date.now() - ms) / 1000;
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s / 60) + 'm ago';
+  if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+  if (s < 7 * 86400) return Math.floor(s / 86400) + 'd ago';
+  var d = new Date(ms);
+  return d.getDate() + ' ' + MON[d.getMonth()].slice(0, 3) + yearSuffix(d.getFullYear());
+}
+function fmtSize(n) { return n < 1024 ? n + ' B' : n < 1048576 ? Math.round(n / 1024) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }
+
+/* ---------- state ---------- */
+var today = todayKey(), now = parseKey(today);
+var S = {
+  page: 'home', data: { cg: [], events: [], questions: [], prayers: [] }, loaded: false, offline: false,
+  name: lsGet('icy.name') || '',
+  sel: nextThursday(today), cal: { y: now.y, m: now.m }, calView: 'month', cgForm: null,
+  evTab: 'upcoming', evDay: null, evCal: { y: now.y, m: now.m }, evForm: null, more: {},
+  draft: {}, replyOpen: {}, busy: {}
+};
+var toastTimer = 0, lastJson = '', pollTimer = 0, popFor = null;
+
+function session(date) {
+  for (var i = 0; i < S.data.cg.length; i++) if (S.data.cg[i].date === date) return S.data.cg[i];
+  return { date: date, topic: '', location: '', dinner: '18:00', time: '19:00', off: false, people: [], docs: [] };
+}
+function putSession(s) {
+  var list = S.data.cg;
+  for (var i = 0; i < list.length; i++) if (list[i].date === s.date) { list[i] = s; return; }
+  list.push(s);
+}
+function find(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
+function put(list, item, atTop) {
+  for (var i = 0; i < list.length; i++) if (list[i].id === item.id) { list[i] = item; return; }
+  if (atTop) list.unshift(item); else list.push(item);
+}
+function drop(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) { list.splice(i, 1); return; } }
+function mine(people) { if (!S.name.trim()) return null; for (var i = 0; i < people.length; i++) if (same(people[i].name, S.name)) return people[i]; return null; }
+function evEnd(e) { return e.end || e.date; }
+
+/* ---------- server ---------- */
+function api(method, url, body, headers) {
+  var init = { method: method, headers: headers || {} };
+  if (body instanceof Blob) { init.body = body; init.headers['Content-Type'] = body.type || 'application/octet-stream'; }
+  else if (body) { init.body = JSON.stringify(body); init.headers['Content-Type'] = 'application/json'; }
+  return fetch(url, init).then(function (r) {
+    return r.json().catch(function () { return {}; }).then(function (j) {
+      if (!r.ok) throw Object.assign(new Error(j.error || 'error'), { status: r.status });
+      return j;
+    });
+  });
+}
+function refresh(quiet) {
+  return fetch('/api/state?c=' + encodeURIComponent(client), { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('status ' + r.status); return r.text(); })
+    .then(function (txt) {
+      var wasOff = S.offline, changed = txt !== lastJson;
+      lastJson = txt;
+      S.data = JSON.parse(txt);
+      S.loaded = true; S.offline = false;
+      if (changed || wasOff || !quiet) softRender();
+    })
+    .catch(function () { if (!S.offline) { S.offline = true; softRender(); } });
+}
+function softRender() { // background refreshes wait while someone is typing or has a form open
+  var a = document.activeElement;
+  if (dlg.open || (a && app.contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))) return;
+  render();
+}
+function poll() {
+  clearTimeout(pollTimer);
+  pollTimer = setTimeout(function () {
+    (document.visibilityState === 'visible' ? refresh(true) : Promise.resolve()).then(poll, poll);
+  }, S.offline ? 10000 : 30000);
+}
+function showErr(err) {
+  var s = err && err.status;
+  toast(!s ? 'Can’t reach the server. Check your connection and try again.'
+    : s === 413 ? 'That file is too big. The limit is 10 MB.'
+    : s === 409 ? 'This list is full, so that couldn’t be added.'
+    : s === 403 ? 'Only the person who posted this can remove it.'
+    : s === 404 ? 'That was already removed.'
+    : 'Something went wrong (' + err.message + '). Please try again.');
+  if (s === 404) refresh(true);
+}
+function busy(k, on) { S.busy[k] = on; }
+
+/* ---------- small renderers ---------- */
+function hue(name) { var h = 0, s = String(name).toLowerCase(); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return AVATAR[h % AVATAR.length]; }
+function initials(name) { var w = String(name).trim().split(/\s+/); return ((w[0] || '?').charAt(0) + (w[1] ? w[1].charAt(0) : '')).toUpperCase(); }
+function avatar(name, cls, one) {
+  if (!name) return '<span class="avatar anon ' + (cls || '') + '" aria-hidden="true">?</span>';
+  return '<span class="avatar ' + (cls || '') + '" style="background:' + hue(name) + '" aria-hidden="true">' + esc(initials(name).slice(0, one ? 1 : 2)) + '</span>';
+}
+function stack(people) { // overlapping faces leave room for one letter each
+  return '<span class="stack">' + people.slice(0, 4).map(function (p) { return avatar(p.name, 'sm', true); }).join('') + '</span>';
+}
+function nameField(id) {
+  return '<label class="lbl">Your name<input id="' + id + '" data-bind="name" value="' + esc(S.name) + '" maxlength="40" placeholder="e.g. Maria Tan" autocomplete="name"></label>';
+}
+
+/* ---------- top bar and footer ---------- */
+function topBar() {
+  return '<header class="top dark">' +
+    '<a class="brand" href="#/" aria-label="ICY NUS home"><span class="logo"><img src="/assets/icy-symbol.png" alt=""></span>' +
+      '<span class="brand-text"><strong>ICY NUS</strong><span>Indonesian Catholic Youth</span></span></a>' +
+    '<nav class="nav" aria-label="Pages"><div class="seg dark">' + PAGES.map(function (p) {
+      return '<a href="#/' + (p[0] === 'home' ? '' : p[0]) + '"' + (S.page === p[0] ? ' class="on" aria-current="page"' : '') + '>' +
+        (p[2] ? '<span class="full">' + esc(p[1]) + '</span><span class="short" aria-hidden="true">' + esc(p[2]) + '</span>' : esc(p[1])) + '</a>';
+    }).join('') + '</div></nav>' +
+    '<a class="btn-lime amore" href="' + AMOREDIO + '" target="_blank" rel="noopener">AmoreDio <small>site</small>' + ICON.ext + '</a>' +
+  '</header>' +
+  (S.offline ? '<div class="banner" role="alert">Can’t reach the ICY server right now. Retrying every few seconds; your changes won’t save until it’s back.</div>' : '');
+}
+function footer() {
+  return '<footer class="foot"><img src="/assets/icy-logo-white.png" alt="">' +
+    '<span>ICY NUS · Indonesian Catholic Youth at the National University of Singapore</span>' +
+    '<span>Part of <a href="' + AMOREDIO + '" target="_blank" rel="noopener">AmoreDio</a>, under KKIS (Keluarga Katolik Indonesia di Singapura)</span></footer>';
+}
+
+/* ---------- home ---------- */
+function pageHome() {
+  var s = session(nextThursday(today)), ups = upcoming(), next = ups[0];
+  return '<section class="main hero">' +
+    '<div class="hero-text">' +
+      '<span class="eyebrow">Welcome to ICY NUS</span>' +
+      '<h1>Selamat datang! You’ve found your community.</h1>' +
+      '<p class="lead">ICY (Indonesian Catholic Youth) is the home for Indonesian Catholic students at NUS. Whether you’ve just landed in Singapore or you’re in your final year, there’s a seat for you at our table. Every week we share dinner, gather for Cell Group to pray and reflect on God’s Word, and walk the journey of faith together, as friends and as family.</p>' +
+      '<p class="lead">We’re part of <a href="' + AMOREDIO + '" target="_blank" rel="noopener">AmoreDio</a>, an Indonesian Catholic community in Singapore, which is under KKIS (Keluarga Katolik Indonesia di Singapura).</p>' +
+      '<div class="lineage" aria-label="Where ICY belongs"><span class="me">ICY NUS</span><i>is part of</i><a href="' + AMOREDIO + '" target="_blank" rel="noopener">AmoreDio ' + ICON.ext + '</a><i>under</i><span>KKIS</span></div>' +
+      '<div class="hero-actions"><a class="btn-black" href="#/cg">' + ICON.calendar + ' Come to Cell Group</a><a class="btn-white" href="#/events">See what’s on</a></div>' +
+      '<button class="scroll-hint" data-act="to-prayer">' + ICON.down + ' Scroll down to pray the AmoreDio Prayer</button>' +
+    '</div>' +
+    '<img class="hero-logo" src="/assets/icy-logo-ink.png" alt="ICY logo: we’re one community">' +
+  '</section>' +
+  '<section class="tiles" aria-label="Get involved">' +
+    tile('#/cg', 'var(--lav)', ICON.cross, 'Cell Group',
+      '<p class="big">Every Thursday<br>' + (s.dinner ? 'Dinner ' + shortTime(s.dinner) + ' · ' : '') + 'CG ' + shortTime(s.time) + '</p>' +
+      '<p>Next: ' + esc(longDate(s.date)) + (s.off ? ' (no CG this week)' : '') + ' · ' + esc(s.location || 'Location TBA') + '</p>', 'Sign up for this week') +
+    tile('#/events', 'var(--lime)', ICON.calendar, 'Events',
+      next ? '<p class="big">' + esc(next.title) + '</p><p>' + esc(evDateLabel(next)) + (ups.length > 1 ? ' · and ' + (ups.length - 1) + ' more coming up' : '') + '</p>'
+        : '<p>' + (S.loaded ? 'No upcoming events yet. Planning something? Add it for everyone.' : 'Loading…') + '</p>', 'See events') +
+    tile('#/qna', 'var(--pink)', ICON.question, 'Q&A',
+      '<p>Questions about the CG material or the Catholic faith? Ask the Material Ministry, anonymously if you like.</p>', 'Ask a question') +
+    tile('#/prayer', 'var(--sky)', ICON.heart, 'Prayer Requests',
+      '<p>Share what’s on your heart and the community will pray for you. You can stay anonymous.</p>', 'Share a request') +
+  '</section>' +
+  '<section class="prayer" id="prayer" aria-labelledby="prayer-title">' +
+    '<div class="prayer-head"><span class="eyebrow">Pray with us</span><h2 id="prayer-title" style="font-size:32px">The AmoreDio Prayer</h2>' +
+    '<p class="sub-ink">Our community prayer. When we pray it together, one person reads each line and everyone answers with the response in bold.</p></div>' +
+    '<div class="prayer-cards">' + PRAYER.map(function (card) {
+      return '<article class="pcard"><h3>' + esc(card.title) + '</h3>' + card.parts.map(function (part) {
+        return part[0] === 'r' ? '<p class="resp">' + esc(part[1]) + ' <span>(repeat after each line)</span></p>' : '<p>' + esc(part[1]) + '</p>';
+      }).join('') + '</article>';
+    }).join('') + '</div>' +
+  '</section>';
+}
+function tile(href, color, icon, title, body, go) {
+  return '<a class="tile" href="' + href + '"><span class="tile-ic" style="background:' + color + '">' + icon + '</span><h2>' + esc(title) + '</h2>' + body + '<span class="go">' + esc(go) + ' ' + ICON.arrow + '</span></a>';
+}
+
+/* ---------- cell group ---------- */
+function pageCg() {
+  return '<div class="cols main-first">' +
+    '<aside class="side"><div class="sticky">' + cgBlock(session(S.sel)) + '</div></aside>' +
+    '<section class="main">' +
+      '<div class="title-wrap"><span class="eyebrow">Cell Group</span><h1>Every Thursday: dinner at 6 PM, Cell Group at 7 PM</h1></div>' +
+      '<div class="about">' +
+        '<p class="sub-ink">A Cell Group (CG) is a small group that meets every week to pray together, read and reflect on the Word of God and the week’s CG material, and share honestly about life and faith. It’s where friendships grow and faith becomes personal. You don’t need to know anything beforehand; just come as you are.</p>' +
+        '<p class="sub-ink">We eat dinner together at 6 PM, and Cell Group starts at 7 PM. Pick a Thursday below to see where we’re meeting, tick whether you’re coming for dinner and/or CG, and find the material for that session.</p>' +
+        '<div class="pills"><span class="pill"><i style="background:var(--peach)"></i>Dinner</span><span class="pill"><i style="background:var(--lav)"></i>Cell Group</span></div>' +
+      '</div>' +
+      calendar() +
+    '</section>' +
+  '</div>';
+}
+function calendar() {
+  var y = S.cal.y, m = S.cal.m, h = '<div class="calcard">';
+  h += '<div class="cal-top"><button class="icon-btn ink" data-act="cal-prev" aria-label="Previous month">' + ICON.left + '</button>' +
+    '<strong aria-live="polite">' + MON[m] + ' ' + y + '</strong>' +
+    '<button class="icon-btn ink" data-act="cal-next" aria-label="Next month">' + ICON.right + '</button>' +
+    '<button class="chip-lt" data-act="cal-today" style="background:var(--cell)">This week</button>' +
+    '<div class="seg" role="group" aria-label="Calendar view"><button data-act="cal-view" data-v="month" class="' + (S.calView === 'month' ? 'on' : '') + '" aria-pressed="' + (S.calView === 'month') + '">Month</button>' +
+    '<button data-act="cal-view" data-v="list" class="' + (S.calView === 'list' ? 'on' : '') + '" aria-pressed="' + (S.calView === 'list') + '">List</button></div></div>';
+  var first = dkey(y, m, 1), last = dkey(y, m, daysIn(y, m)), k;
+  if (S.calView === 'list') {
+    h += '<div class="lrows">';
+    for (k = nextThursday(first); k <= last; k = addDays(k, 7)) h += listRow(session(k));
+    return h + '</div></div>';
+  }
+  h += '<div class="mgrid">' + ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(function (d) { return '<div class="mdow">' + d + '</div>'; }).join('');
+  var start = addDays(first, -((dowOf(first) + 6) % 7)), end = addDays(last, 6 - (dowOf(last) + 6) % 7);
+  for (k = start; k <= end; k = addDays(k, 1)) {
+    var p = parseKey(k), cls = 'mcell' + (p.m !== m ? ' out' : '') + (k === today ? ' today' : '');
+    var num = '<span class="num">' + p.d + '</span>';
+    if (dowOf(k) !== 4) { h += '<div class="' + cls + '">' + num + '</div>'; continue; }
+    var s = session(k), n = s.people.length;
+    h += '<button class="' + cls + (k === S.sel ? ' sel' : '') + '" data-act="cg-sel" data-date="' + k + '" aria-label="' + esc(longDate(k)) + ', ' + (s.off ? 'no Cell Group' : 'Cell Group') + (n ? ', ' + n + ' coming' : '') + '">' + num +
+      (s.off ? '<span class="cchip off">No CG</span>'
+        : (s.dinner ? '<span class="cchip dinner">' + shortTime(s.dinner) + ' Dinner</span>' : '') + '<span class="cchip cg">' + shortTime(s.time) + ' Cell Group</span>') +
+      (n ? '<span class="mcount">' + n + ' coming</span>' : '') + '</button>';
+  }
+  return h + '</div></div>';
+}
+function listRow(s) {
+  var p = parseKey(s.date), n = s.people.length;
+  var bits = [s.off ? 'No Cell Group this week' : (s.dinner ? 'Dinner ' + shortTime(s.dinner) + ' · ' : '') + 'CG ' + shortTime(s.time), s.location || 'Location TBA'];
+  return '<button class="lrow' + (s.date === S.sel ? ' sel' : '') + (s.date < today ? ' past' : '') + '" data-act="cg-sel" data-date="' + s.date + '">' +
+    '<span class="ldate"><small>THU</small><b>' + p.d + '</b><small>' + MON[p.m].slice(0, 3).toUpperCase() + '</small></span>' +
+    '<span class="linfo"><strong>' + esc(s.topic || 'Cell Group') + '</strong><span>' + esc(bits.join(' · ')) + '</span></span>' +
+    '<span class="lmeta">' + (n ? n + ' coming' : '') + (n && s.docs.length ? ' · ' : '') + (s.docs.length ? s.docs.length + (s.docs.length === 1 ? ' doc' : ' docs') : '') + '</span></button>';
+}
+function cgBlock(s) {
+  var me = mine(s.people), past = s.date < today, f = S.cgForm;
+  var dinners = s.people.filter(function (p) { return p.dinner; }), cgs = s.people.filter(function (p) { return p.cg; });
+  var h = '<div class="panel dark block" id="block">';
+  h += '<div class="row" style="align-items:flex-start"><div class="grow" style="display:flex;flex-direction:column;gap:6px">' +
+    '<span class="kicker">' + (s.date === today ? 'Today' : past ? 'Past session' : s.date === nextThursday(today) ? 'This week' : 'Cell Group') + '</span>' +
+    '<h2>' + esc(longDate(s.date)) + '</h2>' + (s.topic ? '<p class="sub">' + esc(s.topic) + '</p>' : '') + '</div>' +
+    (f ? '' : '<button class="chip-btn" data-act="cg-edit">' + ICON.edit + ' Edit</button>') + '</div>';
+  if (f) {
+    h += '<form class="cg-edit" data-form="cg">' +
+      '<label class="lbl">Location<input id="cgf-location" data-cgf="location" value="' + esc(f.location) + '" maxlength="120" placeholder="TBA"></label>' +
+      '<label class="lbl"><span>Topic <span class="opt">(optional)</span></span><input id="cgf-topic" data-cgf="topic" value="' + esc(f.topic) + '" maxlength="80" placeholder="e.g. Sesi 40: Forgiveness"></label>' +
+      '<div class="frow"><label class="lbl">Dinner<input type="time" data-cgf="dinner" value="' + esc(f.dinner) + '"></label>' +
+      '<label class="lbl">Cell Group<input type="time" data-cgf="time" value="' + esc(f.time) + '" required></label></div>' +
+      '<p class="hint">Clear the dinner time if there’s no dinner this week.</p>' +
+      '<label class="check"><input type="checkbox" data-cgf="off"' + (f.off ? ' checked' : '') + '><span>No Cell Group this week</span></label>' +
+      '<div class="row end"><button type="button" class="chip-btn" data-act="cg-cancel">Cancel</button><button class="btn-lime"' + (S.busy.cg ? ' disabled' : '') + '>Save changes</button></div></form>';
+  } else {
+    if (s.off) h += '<div class="off-note">No Cell Group this week</div>';
+    h += '<ul class="facts">' +
+      fact('var(--peach)', ICON.dinner, 'Dinner', s.dinner ? fmtTime(s.dinner) : '<span class="tba">No dinner this week</span>') +
+      fact('var(--lav)', ICON.cross, 'Cell Group', fmtTime(s.time)) +
+      fact('var(--lime)', ICON.pin, 'Location', s.location ? esc(s.location) : '<span class="tba">TBA</span>') + '</ul>';
+  }
+  h += '<div class="divider"></div><h3>' + (past ? 'Who came' : 'Are you coming?') + '</h3>';
+  if (!past) {
+    h += nameField('cg-name') +
+      '<div class="ticks">' +
+        tick('dinner', 'Dinner', s.dinner ? fmtTime(s.dinner) : 'No dinner', me && me.dinner, !s.dinner || s.off) +
+        tick('cg', 'Cell Group', fmtTime(s.time), me && me.cg, s.off) +
+      '</div>';
+  }
+  h += whoList('Dinner', dinners) + whoList('Cell Group', cgs);
+  if (!s.people.length) h += '<p class="sub">' + (past ? 'Nobody signed up for this one.' : 'Nobody has ticked yet. Be the first!') + '</p>';
+  h += '<div class="divider"></div><div class="row"><h3 class="grow">Documents</h3><span class="count">' + s.docs.length + '</span></div>';
+  if (s.docs.length) {
+    h += '<ul class="docs">' + s.docs.map(function (d) {
+      var url = '/api/files/' + d.id;
+      return '<li>' + docIcon(d.name) + '<span class="doc-text"><a href="' + url + '" target="_blank" rel="noopener">' + esc(d.name) + '</a>' +
+        '<small>' + fmtSize(d.size) + (d.by ? ' · ' + esc(d.by) : '') + ' · ' + ago(d.at) + '</small></span>' +
+        '<a class="view" href="' + url + '" target="_blank" rel="noopener">View</a>' +
+        '<button class="x" data-act="doc-del" data-id="' + d.id + '" aria-label="Delete ' + esc(d.name) + '" title="Delete">' + ICON.trash + '</button></li>';
+    }).join('') + '</ul>';
+  } else h += '<p class="sub">No documents yet. Upload the readings, slides or notes for this session.</p>';
+  h += '<button class="btn-lime" data-act="doc-pick"' + (S.busy.doc ? ' disabled' : '') + '>' + ICON.upload + (S.busy.doc ? ' Uploading…' : ' Upload document') + '</button>' +
+    '<p class="hint" style="margin-top:-8px">PDF, slides, Word or images, up to 10 MB each.</p>';
+  return h + '</div>';
+}
+function fact(color, icon, label, value) {
+  return '<li><span class="fact-ic" style="background:' + color + '">' + icon + '</span><span><small>' + label + '</small><strong>' + value + '</strong></span></li>';
+}
+function tick(kind, label, sub, on, disabled) {
+  return '<label class="tick"><input type="checkbox" id="tick-' + kind + '" data-tick="' + kind + '"' + (on ? ' checked' : '') + (disabled ? ' disabled' : '') + '>' +
+    '<span class="box">' + ICON.check + '</span><span><strong>' + label + '</strong><small>' + esc(sub) + '</small></span></label>';
+}
+function whoList(label, people) {
+  if (!people.length) return '';
+  return '<div class="who-list"><h4>' + label + ' · ' + people.length + '</h4><div class="names">' + people.map(function (p) {
+    return '<span class="name' + (same(p.name, S.name) ? ' me' : '') + '">' + avatar(p.name, 'sm') + esc(p.name) + '</span>';
+  }).join('') + '</div></div>';
+}
+function docIcon(name) {
+  var ext = (/\.([a-z0-9]+)$/i.exec(name) || [, ''])[1].toLowerCase();
+  var kinds = [[/^pdf$/, 'PDF', 'var(--pink)'], [/^(ppt|pptx|key|odp)$/, 'PPT', 'var(--peach)'], [/^(doc|docx|odt|rtf|txt|md)$/, 'DOC', 'var(--sky)'],
+    [/^(xls|xlsx|csv|ods)$/, 'XLS', 'var(--mint)'], [/^(png|jpe?g|gif|webp|heic)$/, 'IMG', 'var(--lav)']];
+  for (var i = 0; i < kinds.length; i++) if (kinds[i][0].test(ext)) return '<span class="doc-ic" style="background:' + kinds[i][2] + '">' + kinds[i][1] + '</span>';
+  return '<span class="doc-ic" style="background:#fff">FILE</span>';
+}
+
+/* ---------- events ---------- */
+function upcoming() { return S.data.events.filter(function (e) { return evEnd(e) >= today; }).sort(byStart); }
+function byStart(a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : (a.time || '') < (b.time || '') ? -1 : 1; }
+function evDateLabel(e) { return DOW[dowOf(e.date)] + ' · ' + dayMon(e.date) + (e.end ? ' – ' + dayMon(e.end) : ''); }
+function shownEvents() {
+  var list = S.data.events.slice();
+  if (S.evDay) return list.filter(function (e) { return e.date <= S.evDay && S.evDay <= evEnd(e); }).sort(byStart);
+  if (S.evTab === 'past') return list.filter(function (e) { return evEnd(e) < today; }).sort(function (a, b) { return byStart(b, a); });
+  if (S.evTab === 'month') {
+    var a = dkey(now.y, now.m, 1), z = dkey(now.y, now.m, daysIn(now.y, now.m));
+    return list.filter(function (e) { return e.date <= z && evEnd(e) >= a; }).sort(byStart);
+  }
+  return upcoming();
+}
+function pageEvents() {
+  var list = shownEvents();
+  var tabs = [['upcoming', 'Upcoming'], ['month', 'This month'], ['past', 'Past']];
+  return '<div class="cols">' +
+    '<aside class="side">' + miniCal() +
+      '<div class="panel dark"><h3>Joining as</h3>' + nameField('ev-name') + '<p class="sub">Your name shows on the events you join. Hover over (or tap) who’s going on an event to see everyone.</p></div>' +
+    '</aside>' +
+    '<section class="main">' +
+      '<div class="head"><div class="title-wrap"><span class="eyebrow">Events</span><h1>What’s happening</h1>' +
+        '<p class="sub-ink">Current and upcoming ICY events. Tap Join so everyone knows you’re coming.</p></div>' +
+        '<button class="btn-black" data-act="ev-new">' + ICON.plus + ' Add event</button></div>' +
+      (S.evDay ? '<div class="filter"><span class="tag">' + esc(longDate(S.evDay)) + '</span><button class="chip-lt" data-act="ev-day-clear">Show all events</button></div>'
+        : '<div class="seg" role="group" aria-label="Which events">' + tabs.map(function (t) {
+          return '<button data-act="ev-tab" data-v="' + t[0] + '" class="' + (S.evTab === t[0] ? 'on' : '') + '" aria-pressed="' + (S.evTab === t[0]) + '">' + t[1] + '</button>';
+        }).join('') + '</div>') +
+      (!S.loaded ? '<div class="empty">Loading events…</div>'
+        : list.length ? '<div class="evlist">' + list.map(evCard).join('') + '</div>'
+        : '<div class="empty">' + (S.evTab === 'past' && !S.evDay ? 'No past events yet.' : 'Nothing scheduled here yet.<br>Planning something? Tap <strong>Add event</strong> to share it.') + '</div>') +
+    '</section>' +
+  '</div>';
+}
+function miniCal() {
+  var y = S.evCal.y, m = S.evCal.m, has = {};
+  S.data.events.forEach(function (e) { for (var k = e.date, n = 0; k <= evEnd(e) && n < 62; k = addDays(k, 1), n++) has[k] = 1; });
+  var first = dkey(y, m, 1), start = addDays(first, -((dowOf(first) + 6) % 7)), h = '';
+  for (var i = 0; i < 42; i++) {
+    var k = addDays(start, i), p = parseKey(k);
+    h += '<button class="day' + (p.m !== m ? ' out' : '') + (k === today ? ' today' : '') + (has[k] ? ' has' : '') + (k === S.evDay ? ' on' : '') + '"' +
+      (has[k] ? ' data-act="ev-day" data-date="' + k + '" aria-label="' + esc(longDate(k)) + ', has events"' : ' disabled aria-label="' + esc(longDate(k)) + '"') + '>' + p.d + '</button>';
+  }
+  return '<div class="panel dark"><div class="cal-head"><strong>' + MON[m] + ' ' + y + '</strong>' +
+    '<button class="icon-btn" data-act="evcal-prev" aria-label="Previous month">' + ICON.left + '</button><button class="icon-btn" data-act="evcal-next" aria-label="Next month">' + ICON.right + '</button></div>' +
+    '<div class="cal-dow" aria-hidden="true"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>' +
+    '<div class="cal-grid">' + h + '</div><p class="sub">Dots mark days with events. Pick one to see just that day.</p></div>';
+}
+function evCard(e) {
+  var me = mine(e.joins), live = e.date <= today && today <= evEnd(e), long = e.desc.length > 220 || e.desc.split('\n').length > 3;
+  return '<article class="evcard c-' + esc(e.color) + '" id="ev-' + e.id + '">' +
+    '<div class="evc-body">' +
+      '<div class="evc-top"><span>' + esc(evDateLabel(e)) + '</span><span>' + (e.time ? fmtTime(e.time) : 'All day') + '</span></div>' +
+      (live ? '<span class="tag live">Happening now</span>' : '') +
+      '<h3 class="evc-title">' + esc(e.title) + '</h3>' +
+      (e.desc ? '<p class="evc-desc' + (long && !S.more[e.id] ? ' clamp' : '') + '">' + esc(e.desc) + '</p>' +
+        (long ? '<button class="more" data-act="ev-more" data-id="' + e.id + '">' + (S.more[e.id] ? 'Show less' : 'Read more') + '</button>' : '') : '') +
+      (e.location ? '<p class="evc-loc">' + ICON.pin + esc(e.location) + '</p>' : '') +
+      '<div class="evc-foot">' +
+        '<button class="join' + (me ? ' on' : '') + '" data-act="ev-join" data-id="' + e.id + '" aria-pressed="' + Boolean(me) + '">' + (me ? ICON.check + ' Going' : ICON.plus + ' Join') + '</button>' +
+        (e.joins.length ? '<button class="going" data-pop="' + e.id + '" aria-label="' + e.joins.length + ' going: ' + esc(e.joins.map(function (j) { return j.name; }).join(', ')) + '">' + stack(e.joins) + e.joins.length + ' going</button>'
+          : '<span class="nobody">Be the first to join</span>') +
+        '<span class="evc-tools">' +
+          '<button class="ic" data-act="ev-edit" data-id="' + e.id + '" aria-label="Edit ' + esc(e.title) + '" title="Edit">' + ICON.edit + '</button>' +
+          '<button class="ic" data-act="ev-del" data-id="' + e.id + '" aria-label="Delete ' + esc(e.title) + '" title="Delete">' + ICON.trash + '</button>' +
+        '</span>' +
+      '</div>' +
+    '</div>' +
+    (e.image ? '<a class="evc-pic" href="/api/files/' + e.image.id + '" target="_blank" rel="noopener" aria-label="Open the picture for ' + esc(e.title) + '"><img src="/api/files/' + e.image.id + '" alt="" loading="lazy"></a>' : '') +
+  '</article>';
+}
+function evFormHtml() {
+  var f = S.evForm;
+  return '<form class="dform" data-form="ev" novalidate>' +
+    '<div class="row"><h2 class="grow">' + (f.id ? 'Edit event' : 'Add an event') + '</h2><button type="button" class="x" data-act="dlg-close" aria-label="Close">' + ICON.x + '</button></div>' +
+    '<label class="lbl">Title<input id="evf-title" data-f="title" value="' + esc(f.title) + '" maxlength="100" placeholder="e.g. Christmas Mass and dinner"></label>' +
+    '<div class="frow"><label class="lbl">Date<input type="date" data-f="date" value="' + esc(f.date) + '"></label>' +
+      '<label class="lbl"><span>Until <span class="opt">(optional)</span></span><input type="date" data-f="end" value="' + esc(f.end) + '"></label>' +
+      '<label class="lbl"><span>Time <span class="opt">(optional)</span></span><input type="time" data-f="time" value="' + esc(f.time) + '"></label></div>' +
+    '<label class="lbl"><span>Location <span class="opt">(optional)</span></span><input data-f="location" value="' + esc(f.location) + '" maxlength="120" placeholder="e.g. Church of St Ignatius"></label>' +
+    '<label class="lbl">Description<textarea data-f="desc" maxlength="2000" rows="4" placeholder="What’s it about? Anything to bring?">' + esc(f.desc) + '</textarea></label>' +
+    '<div class="lbl"><span>Picture <span class="opt">(optional)</span></span><div class="picbox" id="picbox">' + picbox() + '</div></div>' +
+    '<div class="lbl">Colour<div class="swatches" role="radiogroup" aria-label="Card colour">' + COLORS.map(function (c) {
+      return '<label><input type="radio" name="evcolor" data-f="color" value="' + c[0] + '"' + (f.color === c[0] ? ' checked' : '') + ' aria-label="' + c[0] + '"><span style="background:' + c[1] + '"></span></label>';
+    }).join('') + '</div></div>' +
+    '<p class="err" id="evf-err" role="alert"></p>' +
+    '<div class="row end"><button type="button" class="chip-btn" data-act="dlg-close">Cancel</button><button class="btn-lime" id="evf-save">' + (f.id ? 'Save changes' : 'Add event') + '</button></div>' +
+  '</form>';
+}
+function picbox() {
+  var f = S.evForm, src = f.blobUrl || (f.image && !f.removed ? '/api/files/' + f.image.id : '');
+  return (src ? '<img src="' + esc(src) + '" alt="Chosen picture">' : '') +
+    '<button type="button" class="chip-btn" data-act="pic-pick">' + ICON.upload + (src ? ' Change picture' : ' Upload picture') + '</button>' +
+    (src ? '<button type="button" class="chip-btn" data-act="pic-remove">Remove</button>' : '');
+}
+
+/* ---------- Q&A and prayer requests ---------- */
+function draft(k) { return S.draft[k] == null ? '' : S.draft[k]; }
+function pageQna() {
+  var named = Boolean(String(draft('q.name')).trim());
+  return '<div class="cols">' +
+    '<aside class="side"><div class="panel dark sticky">' +
+      '<span class="kicker">Q&amp;A</span><h2>Ask the Material Ministry</h2>' +
+      '<p class="sub">Have a question about the Cell Group material, or any other question about the Catholic faith that came up? Reach out to the Material Ministry through the form below. Your questions will be discussed in our podcast, which is updated every week.</p>' +
+      '<ul class="notes"><li>' + ICON.anon + '<span><strong>You can stay anonymous.</strong> Just leave your name blank.</span></li>' +
+        '<li>' + ICON.chat + '<span><strong>Want the answer messaged to you?</strong> Write your name and tick “Message me the answer”, and the Material Ministry will reach out to you personally.</span></li></ul>' +
+      '<form class="form" data-form="q">' +
+        '<label class="lbl">Your question<textarea id="q-text" data-draft="q.text" maxlength="2000" rows="5" placeholder="Type your question here…">' + esc(draft('q.text')) + '</textarea></label>' +
+        '<label class="lbl"><span>Your name <span class="opt">(optional)</span></span><input id="q-name" data-draft="q.name" value="' + esc(draft('q.name')) + '" maxlength="40" placeholder="Leave blank to stay anonymous" autocomplete="name"></label>' +
+        '<label class="check"><input type="checkbox" id="q-dm" data-draft="q.dm"' + (named && S.draft['q.dm'] ? ' checked' : '') + (named ? '' : ' disabled') + '><span>Message me the answer personally<span class="hint needs"><br>Needs your name</span></span></label>' +
+        '<button class="btn-lime" id="q-send"' + (S.busy.q ? ' disabled' : '') + '>' + ICON.send + (S.busy.q ? ' Sending…' : ' Send question') + '</button>' +
+      '</form>' +
+      '<a class="link-muted" href="' + AMOREDIO_QA + '" target="_blank" rel="noopener">Or use AmoreDio’s own Q&amp;A form ' + ICON.ext + '</a>' +
+    '</div></aside>' +
+    '<section class="main">' +
+      '<div class="title-wrap"><span class="eyebrow">Q&amp;A forum</span><h1>Questions from the community</h1>' +
+      '<p class="sub-ink">Answers are discussed in the weekly podcast, and anyone can add a reply below. Questions you post from this device can be deleted by you.</p></div>' +
+      (!S.loaded ? '<div class="empty">Loading questions…</div>'
+        : S.data.questions.length ? '<div class="feed">' + S.data.questions.map(qCard).join('') + '</div>'
+        : '<div class="empty">No questions yet. Be the first to ask!</div>') +
+    '</section>' +
+  '</div>';
+}
+function postHead(name, created, extra, delAct, id, label) {
+  return '<div class="post-head">' + avatar(name) + '<div class="who"><strong>' + esc(name || 'Anonymous') + '</strong><span class="when">' + ago(created) + '</span></div>' + (extra || '') +
+    (postKeys[id] ? '<button class="x" data-act="' + delAct + '" data-id="' + id + '" aria-label="Delete your ' + label + '" title="Delete">' + ICON.trash + '</button>' : '') + '</div>';
+}
+function qCard(q) {
+  var open = S.replyOpen[q.id];
+  return '<article class="post lt">' +
+    postHead(q.name, q.created, q.dm ? '<span class="tag pink">' + ICON.chat + ' Answer by message</span>' : '', 'q-del', q.id, 'question') +
+    '<p class="post-text">' + esc(q.text) + '</p>' +
+    (q.replies.length ? '<ul class="replies">' + q.replies.map(function (r) {
+      return '<li><div class="reply-head">' + avatar(r.name, 'sm') + '<strong>' + esc(r.name || 'Anonymous') + '</strong><span>' + ago(r.created) + '</span><span class="grow"></span>' +
+        (postKeys[r.id] ? '<button class="x" data-act="r-del" data-id="' + r.id + '" data-q="' + q.id + '" aria-label="Delete your reply" title="Delete">' + ICON.trash + '</button>' : '') +
+        '</div><p>' + esc(r.text) + '</p></li>';
+    }).join('') + '</ul>' : '') +
+    (open ? '<form class="reply-form" data-form="r" data-id="' + q.id + '">' +
+        '<textarea id="r-text-' + q.id + '" data-draft="r.' + q.id + '.text" maxlength="2000" rows="3" placeholder="Write a reply…" aria-label="Your reply">' + esc(draft('r.' + q.id + '.text')) + '</textarea>' +
+        '<div class="reply-row"><input id="r-name-' + q.id + '" data-draft="r.' + q.id + '.name" value="' + esc(draft('r.' + q.id + '.name')) + '" maxlength="40" placeholder="Your name (optional)" aria-label="Your name (optional)">' +
+        '<button type="button" class="btn-sm ghost" data-act="r-close" data-id="' + q.id + '">Cancel</button><button class="btn-sm"' + (S.busy['r' + q.id] ? ' disabled' : '') + '>Post reply</button></div></form>'
+      : '<button class="link-btn" data-act="r-open" data-id="' + q.id + '">' + (q.replies.length ? 'Add a reply' : 'Reply') + '</button>') +
+  '</article>';
+}
+function pagePrayer() {
+  return '<div class="cols">' +
+    '<aside class="side"><div class="panel dark sticky">' +
+      '<span class="kicker">Prayer Requests</span><h2>We’ll pray for you</h2>' +
+      '<p class="sub">Share what’s on your heart, big or small, and the ICY community will hold it in prayer.</p>' +
+      '<ul class="notes"><li>' + ICON.anon + '<span><strong>You can stay anonymous.</strong> Just leave your name blank.</span></li></ul>' +
+      '<form class="form" data-form="p">' +
+        '<label class="lbl">Your prayer request<textarea id="p-text" data-draft="p.text" maxlength="2000" rows="5" placeholder="Please pray for…">' + esc(draft('p.text')) + '</textarea></label>' +
+        '<label class="lbl"><span>Your name <span class="opt">(optional)</span></span><input id="p-name" data-draft="p.name" value="' + esc(draft('p.name')) + '" maxlength="40" placeholder="Leave blank to stay anonymous" autocomplete="name"></label>' +
+        '<button class="btn-lime" id="p-send"' + (S.busy.p ? ' disabled' : '') + '>' + ICON.heart + (S.busy.p ? ' Sharing…' : ' Share prayer request') + '</button>' +
+      '</form>' +
+    '</div></aside>' +
+    '<section class="main">' +
+      '<div class="title-wrap"><span class="eyebrow">Prayer wall</span><h1>Lift each other up</h1>' +
+      '<p class="sub-ink">Tap 🙏 when you pray for someone, so they know they’re not alone.</p></div>' +
+      (!S.loaded ? '<div class="empty">Loading prayer requests…</div>'
+        : S.data.prayers.length ? '<div class="feed">' + S.data.prayers.map(prayerCard).join('') + '</div>'
+        : '<div class="empty">No prayer requests yet. Share yours, and we’ll pray with you.</div>') +
+    '</section>' +
+  '</div>';
+}
+function prayerCard(p) {
+  var n = p.praying;
+  return '<article class="post lt">' + postHead(p.name, p.created, '', 'p-del', p.id, 'prayer request') +
+    '<p class="post-text">' + esc(p.text) + '</p>' +
+    '<div class="post-foot"><button class="pray' + (p.mine ? ' on' : '') + '" data-act="pray" data-id="' + p.id + '" aria-pressed="' + p.mine + '">🙏 ' + (p.mine ? 'Praying' : 'I’m praying') + '</button>' +
+    '<span class="pray-count">' + (n ? n + (n === 1 ? ' person is' : ' people are') + ' praying' : 'Be the first to pray') + '</span></div>' +
+  '</article>';
+}
+
+/* ---------- render ---------- */
+var PAGE_FN = { home: pageHome, cg: pageCg, events: pageEvents, qna: pageQna, prayer: pagePrayer };
+function render() {
+  var fid = document.activeElement && document.activeElement.id;
+  hidePop();
+  app.innerHTML = topBar() + PAGE_FN[S.page]() + footer();
+  if (fid && fid !== 'dlg') { var el = document.getElementById(fid); if (el && app.contains(el)) try { el.focus({ preventScroll: true }); } catch (e) {} }
+}
+function route() {
+  var h = location.hash.replace(/^#\/?/, '').split(/[/?]/)[0], page = PAGE_FN[h] ? h : 'home';
+  var changed = page !== S.page;
+  S.page = page;
+  if (changed) { S.cgForm = null; S.evDay = null; }
+  document.title = (page === 'home' ? 'ICY NUS · Indonesian Catholic Youth' : PAGES.filter(function (p) { return p[0] === page; })[0][1] + ' · ICY NUS');
+  render();
+  if (changed) window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+/* ---------- actions ---------- */
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove('show'); }, 3200);
+}
+function openDialog(html) {
+  dlg.innerHTML = html;
+  if (!dlg.open) dlg.showModal();
+  var first = dlg.querySelector('input:not([type=radio]),textarea');
+  if (first) first.focus();
+}
+function closeDialog() { if (dlg.open) dlg.close(); }
+dlg.addEventListener('close', function () {
+  if (S.evForm && S.evForm.blobUrl) URL.revokeObjectURL(S.evForm.blobUrl);
+  S.evForm = null; S.afterName = null;
+  dlg.innerHTML = '';
+});
+dlg.addEventListener('click', function (e) { if (e.target === dlg) closeDialog(); }); // a click on the backdrop
+
+function withName(then) { // joining needs a name; ask once and remember it on this device
+  if (S.name.trim()) return then();
+  S.afterName = then;
+  openDialog('<form class="dform" data-form="name"><div class="row"><h2 class="grow">What’s your name?</h2><button type="button" class="x" data-act="dlg-close" aria-label="Close">' + ICON.x + '</button></div>' +
+    '<p class="sub">So everyone can see who’s coming. We’ll remember it on this device.</p>' +
+    '<label class="lbl">Your name<input id="dlg-name" maxlength="40" placeholder="e.g. Maria Tan" autocomplete="name"></label>' +
+    '<div class="row end"><button type="button" class="chip-btn" data-act="dlg-close">Cancel</button><button class="btn-lime">Continue</button></div></form>');
+}
+function setName(v) { S.name = v; lsSet('icy.name', v.trim()); }
+function syncTicks() { // typing a name shows that person's ticks without re-rendering, which would swallow the next click
+  var me = mine(session(S.sel).people);
+  ['dinner', 'cg'].forEach(function (k) { var b = document.getElementById('tick-' + k); if (b) b.checked = Boolean(me && me[k]); });
+}
+
+function rsvp(kind, on, box) {
+  var s = session(S.sel), me = mine(s.people) || { cg: false, dinner: false };
+  if (!S.name.trim()) {
+    box.checked = !on;
+    toast('Type your name first, so everyone knows who’s coming.');
+    var f = document.getElementById('cg-name'); if (f) f.focus();
+    return;
+  }
+  var body = { name: S.name.trim(), cg: kind === 'cg' ? on : me.cg, dinner: kind === 'dinner' ? on : me.dinner };
+  api('POST', '/api/cg/' + S.sel + '/rsvp', body).then(function (r) {
+    putSession(r.session);
+    render();
+    toast(on ? (kind === 'dinner' ? 'See you at dinner!' : 'See you at Cell Group!') : 'Got it, you’re off the ' + (kind === 'dinner' ? 'dinner' : 'Cell Group') + ' list.');
+  }).catch(function (err) { box.checked = !on; showErr(err); });
+}
+function saveCg() {
+  var f = S.cgForm;
+  if (!/^\d{2}:\d{2}$/.test(f.time)) { toast('Cell Group needs a start time.'); return; }
+  busy('cg', true); render();
+  api('POST', '/api/cg/' + S.sel, { location: f.location, topic: f.topic, dinner: f.dinner, time: f.time, off: f.off }).then(function (r) {
+    putSession(r.session); S.cgForm = null; toast('Saved for ' + longDate(S.sel) + '.');
+  }).catch(showErr).then(function () { busy('cg', false); render(); });
+}
+function uploadDoc(file) {
+  if (file.size > MAX_FILE) { toast('That file is ' + fmtSize(file.size) + '. The limit is 10 MB.'); return; }
+  var date = S.sel;
+  busy('doc', true); render();
+  api('POST', '/api/cg/' + date + '/docs', file, { 'X-File-Name': encodeURIComponent(file.name), 'X-Uploader': encodeURIComponent(S.name.trim()) })
+    .then(function (r) { putSession(r.session); toast('Uploaded “' + file.name + '”.'); })
+    .catch(showErr).then(function () { busy('doc', false); render(); });
+}
+function deleteDoc(id) {
+  var s = session(S.sel), d = find(s.docs, id);
+  if (!d || !confirm('Delete “' + d.name + '” from ' + longDate(S.sel) + '? This can’t be undone.')) return;
+  api('DELETE', '/api/cg/' + S.sel + '/docs/' + id).then(function (r) { putSession(r.session); render(); toast('Document deleted.'); }).catch(showErr);
+}
+
+function openEvent(e) {
+  S.evForm = e ? { id: e.id, title: e.title, date: e.date, end: e.end, time: e.time, location: e.location, desc: e.desc, color: e.color, image: e.image, removed: false, blob: null, blobUrl: '' }
+    : { id: null, title: '', date: today, end: '', time: '', location: '', desc: '', color: COLORS[S.data.events.length % COLORS.length][0], image: null, removed: false, blob: null, blobUrl: '' };
+  openDialog(evFormHtml());
+}
+function shrinkImage(file) { // big phone photos are scaled to 1600px and saved as JPEG before uploading
+  return new Promise(function (resolve, reject) {
+    var url = URL.createObjectURL(file), img = new Image();
+    img.onload = function () {
+      var w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, 1600 / Math.max(w, h)), c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k));
+      var g = c.getContext('2d');
+      g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(function (b) { if (b) resolve(b); else reject(new Error('image')); }, 'image/jpeg', 0.86);
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('image')); };
+    img.src = url;
+  });
+}
+function pickPicture(file) {
+  var f = S.evForm;
+  if (!f) return;
+  shrinkImage(file).then(function (blob) {
+    if (S.evForm !== f) return;
+    if (f.blobUrl) URL.revokeObjectURL(f.blobUrl);
+    f.blob = blob; f.blobUrl = URL.createObjectURL(blob); f.fileName = file.name.replace(/\.[^.]+$/, '') + '.jpg';
+    document.getElementById('picbox').innerHTML = picbox();
+  }).catch(function () { toast('That picture couldn’t be opened. Try a JPG or PNG.'); });
+}
+function saveEvent() {
+  var f = S.evForm, err = document.getElementById('evf-err');
+  var problem = !f.title.trim() ? 'Give the event a title.' : !f.date ? 'Pick a date.' : f.end && f.end < f.date ? 'The end date is before the start date.' : '';
+  if (problem) { err.textContent = problem; return; }
+  var btn = document.getElementById('evf-save');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  var image = f.blob ? api('POST', '/api/files', f.blob, { 'X-File-Name': encodeURIComponent(f.fileName || 'picture.jpg') }).then(function (r) { return r.file.id; })
+    : Promise.resolve(f.image && !f.removed ? f.image.id : null);
+  image.then(function (imageId) {
+    var body = { title: f.title, date: f.date, end: f.end, time: f.time, location: f.location, desc: f.desc, color: f.color, image: imageId };
+    return api(f.id ? 'PUT' : 'POST', f.id ? '/api/events/' + f.id : '/api/events', body);
+  }).then(function (r) {
+    put(S.data.events, r.event);
+    var isNew = !f.id;
+    closeDialog();
+    if (isNew) { S.evDay = null; S.evTab = evEnd(r.event) < today ? 'past' : 'upcoming'; }
+    render();
+    toast(isNew ? 'Event added.' : 'Event updated.');
+    var card = document.getElementById('ev-' + r.event.id); if (card) card.scrollIntoView({ block: 'nearest' });
+  }).catch(function (e) {
+    btn.disabled = false; btn.textContent = f.id ? 'Save changes' : 'Add event';
+    err.textContent = e.status === 413 ? 'That picture is too big. The limit is 10 MB.' : e.status ? 'Couldn’t save (' + e.message + '). Check the fields and try again.' : 'Can’t reach the server. Try again in a moment.';
+  });
+}
+function joinEvent(id) {
+  var e = find(S.data.events, id);
+  if (!e) return;
+  withName(function () {
+    var on = !mine(e.joins);
+    api('POST', '/api/events/' + id + '/join', { name: S.name.trim(), on: on }).then(function (r) {
+      put(S.data.events, r.event); render(); toast(on ? 'You’re going to ' + r.event.title + '!' : 'You’ve left ' + r.event.title + '.');
+    }).catch(showErr);
+  });
+}
+function deleteEvent(id) {
+  var e = find(S.data.events, id);
+  if (!e || !confirm('Delete “' + e.title + '”? This can’t be undone.')) return;
+  api('DELETE', '/api/events/' + id).then(function () { drop(S.data.events, id); render(); toast('Event deleted.'); }).catch(showErr);
+}
+
+function sendPost(kind) { // kind is 'q' (question) or 'p' (prayer request)
+  var text = String(draft(kind + '.text')).trim(), name = String(draft(kind + '.name')).trim();
+  if (!text) { toast(kind === 'q' ? 'Type your question first.' : 'Type your prayer request first.'); var t = document.getElementById(kind + '-text'); if (t) t.focus(); return; }
+  var body = { text: text, name: name };
+  if (kind === 'q') body.dm = Boolean(name && S.draft['q.dm']);
+  busy(kind, true); render();
+  api('POST', kind === 'q' ? '/api/questions' : '/api/prayers', body).then(function (r) {
+    keepKey(r.item.id, r.key);
+    put(kind === 'q' ? S.data.questions : S.data.prayers, r.item, true);
+    S.draft[kind + '.text'] = ''; S.draft['q.dm'] = false;
+    toast(kind === 'q' ? (name ? 'Thanks, ' + name + '! Your question was sent.' : 'Your question was sent anonymously.')
+      : 'Thank you for sharing. We’re praying with you.');
+  }).catch(showErr).then(function () { busy(kind, false); render(); });
+}
+function deletePost(kind, id) {
+  if (!confirm(kind === 'q' ? 'Delete your question?' : 'Delete your prayer request?')) return;
+  api('DELETE', (kind === 'q' ? '/api/questions/' : '/api/prayers/') + id, { key: postKeys[id] }).then(function () {
+    drop(kind === 'q' ? S.data.questions : S.data.prayers, id); render(); toast('Deleted.');
+  }).catch(showErr);
+}
+function sendReply(qid) {
+  var text = String(draft('r.' + qid + '.text')).trim(), name = String(draft('r.' + qid + '.name')).trim();
+  if (!text) { toast('Type your reply first.'); return; }
+  busy('r' + qid, true); render();
+  api('POST', '/api/questions/' + qid + '/replies', { text: text, name: name }).then(function (r) {
+    keepKey(r.reply, r.key);
+    put(S.data.questions, r.item);
+    S.draft['r.' + qid + '.text'] = ''; S.replyOpen[qid] = false;
+    toast('Reply posted.');
+  }).catch(showErr).then(function () { busy('r' + qid, false); render(); });
+}
+function deleteReply(qid, rid) {
+  if (!confirm('Delete your reply?')) return;
+  api('DELETE', '/api/questions/' + qid + '/replies/' + rid, { key: postKeys[rid] }).then(function (r) { put(S.data.questions, r.item); render(); toast('Reply deleted.'); }).catch(showErr);
+}
+function pray(id) {
+  var p = find(S.data.prayers, id);
+  if (!p) return;
+  api('POST', '/api/prayers/' + id + '/pray', { client: client, on: !p.mine }).then(function (r) {
+    put(S.data.prayers, r.item); render(); if (r.item.mine) toast('Thank you for praying. 🙏');
+  }).catch(showErr);
+}
+
+/* who's going: a card that follows the hovered or tapped "going" button, like reactions in a chat */
+function showPop(el) {
+  var e = find(S.data.events, el.getAttribute('data-pop'));
+  if (!e || !e.joins.length) return;
+  var max = 12;
+  pop.innerHTML = '<div class="pop-title">Going · ' + e.joins.length + '</div>' + e.joins.slice(0, max).map(function (j) {
+    return '<div class="pop-row">' + avatar(j.name, 'sm') + '<span>' + esc(j.name) + '</span></div>';
+  }).join('') + (e.joins.length > max ? '<div class="pop-more">and ' + (e.joins.length - max) + ' more</div>' : '');
+  pop.hidden = false;
+  var r = el.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+  var top = r.bottom + 8 + h > window.innerHeight - 8 ? r.top - h - 8 : r.bottom + 8;
+  pop.style.top = Math.max(8, top) + 'px';
+  pop.style.left = Math.min(Math.max(8, r.left), window.innerWidth - w - 8) + 'px';
+  popFor = el;
+}
+function hidePop() { pop.hidden = true; popFor = null; }
+// a mouse shows it on hover; touch and keyboard toggle it with a tap or Enter (see the click handler)
+document.addEventListener('pointerover', function (e) {
+  if (e.pointerType !== 'mouse') return;
+  var el = e.target.closest && e.target.closest('[data-pop]');
+  if (el && el !== popFor) showPop(el);
+});
+document.addEventListener('pointerout', function (e) {
+  if (e.pointerType !== 'mouse') return;
+  var el = e.target.closest && e.target.closest('[data-pop]');
+  if (el && (!e.relatedTarget || !el.contains(e.relatedTarget))) hidePop();
+});
+window.addEventListener('scroll', hidePop, { passive: true });
+window.addEventListener('resize', hidePop);
+
+document.addEventListener('click', function (e) {
+  var popEl = e.target.closest('[data-pop]');
+  if (popEl) { if (popFor === popEl && e.pointerType !== 'mouse') hidePop(); else showPop(popEl); return; }
+  if (popFor) hidePop();
+  var t = e.target.closest('[data-act]');
+  if (!t) return;
+  var act = t.getAttribute('data-act'), id = t.getAttribute('data-id'), v = t.getAttribute('data-v');
+  switch (act) {
+    case 'to-prayer': document.getElementById('prayer').scrollIntoView(); break;
+    case 'cal-prev': case 'cal-next':
+      var m = S.cal.m + (act === 'cal-next' ? 1 : -1);
+      S.cal = { y: S.cal.y + Math.floor(m / 12), m: (m + 12) % 12 }; render(); break;
+    case 'cal-today':
+      S.sel = nextThursday(today); var p = parseKey(S.sel); S.cal = { y: p.y, m: p.m }; S.cgForm = null; render(); break;
+    case 'cal-view': S.calView = v; render(); break;
+    case 'cg-sel':
+      S.sel = t.getAttribute('data-date'); S.cgForm = null; render();
+      if (window.innerWidth <= 923) document.getElementById('block').scrollIntoView({ block: 'start' });
+      break;
+    case 'cg-edit': var s = session(S.sel); S.cgForm = { location: s.location, topic: s.topic, dinner: s.dinner, time: s.time, off: s.off }; render();
+      var loc = document.getElementById('cgf-location'); if (loc) loc.focus(); break;
+    case 'cg-cancel': S.cgForm = null; render(); break;
+    case 'doc-pick': docFile.value = ''; docFile.click(); break;
+    case 'doc-del': deleteDoc(id); break;
+    case 'ev-tab': S.evTab = v; render(); break;
+    case 'ev-day': S.evDay = t.getAttribute('data-date'); render(); break;
+    case 'ev-day-clear': S.evDay = null; render(); break;
+    case 'evcal-prev': case 'evcal-next':
+      var em = S.evCal.m + (act === 'evcal-next' ? 1 : -1);
+      S.evCal = { y: S.evCal.y + Math.floor(em / 12), m: (em + 12) % 12 }; render(); break;
+    case 'ev-new': openEvent(null); break;
+    case 'ev-edit': openEvent(find(S.data.events, id)); break;
+    case 'ev-del': deleteEvent(id); break;
+    case 'ev-join': joinEvent(id); break;
+    case 'ev-more': S.more[id] = !S.more[id]; render(); break;
+    case 'pic-pick': picFile.value = ''; picFile.click(); break;
+    case 'pic-remove':
+      if (S.evForm.blobUrl) URL.revokeObjectURL(S.evForm.blobUrl);
+      S.evForm.blob = null; S.evForm.blobUrl = ''; S.evForm.removed = true;
+      document.getElementById('picbox').innerHTML = picbox(); break;
+    case 'dlg-close': closeDialog(); break;
+    case 'q-del': deletePost('q', id); break;
+    case 'p-del': deletePost('p', id); break;
+    case 'r-open': S.replyOpen[id] = true; render(); var rt = document.getElementById('r-text-' + id); if (rt) rt.focus(); break;
+    case 'r-close': S.replyOpen[id] = false; render(); break;
+    case 'r-del': deleteReply(t.getAttribute('data-q'), id); break;
+    case 'pray': pray(id); break;
+  }
+});
+document.addEventListener('input', function (e) {
+  var t = e.target;
+  if (t.hasAttribute('data-bind')) { setName(t.value); syncTicks(); }
+  else if (t.hasAttribute('data-draft')) {
+    S.draft[t.getAttribute('data-draft')] = t.type === 'checkbox' ? t.checked : t.value;
+    if (t.id === 'q-name') { var dm = document.getElementById('q-dm'); if (dm) { dm.disabled = !t.value.trim(); if (dm.disabled) dm.checked = false; } }
+  } else if (t.hasAttribute('data-f') && S.evForm) S.evForm[t.getAttribute('data-f')] = t.value;
+  else if (t.hasAttribute('data-cgf') && S.cgForm) S.cgForm[t.getAttribute('data-cgf')] = t.type === 'checkbox' ? t.checked : t.value;
+});
+document.addEventListener('change', function (e) {
+  var t = e.target;
+  if (t.hasAttribute('data-tick')) rsvp(t.getAttribute('data-tick'), t.checked, t);
+});
+document.addEventListener('submit', function (e) {
+  var f = e.target, k = f.getAttribute('data-form');
+  if (!k) return;
+  e.preventDefault();
+  if (k === 'q' || k === 'p') sendPost(k);
+  else if (k === 'r') sendReply(f.getAttribute('data-id'));
+  else if (k === 'cg') saveCg();
+  else if (k === 'ev') saveEvent();
+  else if (k === 'name') {
+    var v = document.getElementById('dlg-name').value.trim();
+    if (!v) { document.getElementById('dlg-name').focus(); return; }
+    var then = S.afterName;
+    setName(v); closeDialog();
+    if (then) then();
+  }
+});
+docFile.addEventListener('change', function () { if (docFile.files[0]) uploadDoc(docFile.files[0]); });
+picFile.addEventListener('change', function () { if (picFile.files[0]) pickPicture(picFile.files[0]); });
+document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') refresh(true); });
+window.addEventListener('hashchange', route);
+setInterval(function () { // keep "today" right for pages left open past midnight
+  var k = todayKey();
+  if (k !== today) { today = k; now = parseKey(k); softRender(); }
+}, 60000);
+
+route();
+refresh().then(poll);
+})();
+</script>
+</body>
+</html>
