@@ -1,9 +1,12 @@
-# Render Blueprint for ICY NUS: a free web service running server.js, plus a free Postgres database
-# so sign-ups, posts and uploaded files survive restarts (the free web service's own disk is wiped when it restarts).
+# Render Blueprint for ICY NUS: a free web service running server.js, in Singapore to be near NUS.
+# Data lives in a free Neon Postgres database rather than a Render one: Render allows one free database per
+# workspace (Overlap has it) and deletes free databases 30 days after creation. Render asks for the Neon
+# connection string as DATABASE_URL when the Blueprint is created; without it, data is wiped on every restart.
 services:
   - type: web
     name: icy-nus
     runtime: node
+    region: singapore
     plan: free
     branch: main
     buildCommand: npm install
@@ -11,10 +14,4 @@ services:
     healthCheckPath: /api/ping
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: icy-db
-          property: connectionString
-
-databases:
-  - name: icy-db
-    plan: free
+        sync: false
