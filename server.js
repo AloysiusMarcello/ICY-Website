@@ -423,7 +423,9 @@ function keepAwake() {
 async function start() {
   if (process.env.DATABASE_URL) {
     try { pool = await openDatabase(process.env.DATABASE_URL); }
-    catch (e) { console.error('Could not use the database (' + String(e.message).split('\n')[0] + '). Using the data folder instead.'); }
+    catch (e) { // a connection timeout arrives as an AggregateError with no message, only a code
+      console.error('Could not use the database (' + String(e.message || e.code || e).split('\n')[0] + '). Using the data folder instead.');
+    }
   }
   if (!pool) loadFile();
   server.listen(PORT, HOST, () => {
