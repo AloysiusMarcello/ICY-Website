@@ -1,6 +1,6 @@
 'use strict';
-// ICY NUS server: serves icy.html and its assets, and keeps cell group sign-ups, events,
-// questions, prayer requests and uploaded files.
+// ICY NUS server: serves icy.html and its assets, and keeps cell group sign-ups, events, gallery photos,
+// the exam prayers sheet, questions, prayer requests and uploaded files.
 //   node server.js          reachable from this laptop only
 //   node server.js --lan    also reachable from other devices on the same network
 // On a host such as Render it listens publicly on the PORT it is given.
@@ -20,15 +20,37 @@ const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const STORE = path.join(DATA_DIR, 'store.json');
 const FILES = path.join(DATA_DIR, 'files');
 const MAX_BODY = 64 * 1024, MAX_FILE = 10 * 1024 * 1024;
-const LIMIT = { cg: 1000, events: 500, questions: 2000, prayers: 2000, files: 2000, people: 300, docs: 20, replies: 100 };
+const LIMIT = { cg: 1000, events: 500, questions: 2000, prayers: 2000, files: 2000, people: 300, docs: 20, replies: 100, gallery: 500, examRows: 200, cells: 400 };
 const DATE = /^\d{4}-\d{2}-\d{2}$/, TIME = /^([01]\d|2[0-3]):[0-5]\d$/, ID = /^[a-f0-9]{16}$/;
 const COLORS = ['lime', 'lav', 'pink', 'sky', 'peach', 'mint'];
 const IMAGE = /^image\/(jpeg|png|webp|gif)$/;
+const MAX_SHEET_DAYS = 200;
+// the photos the gallery starts with, kept in assets/: file, width, height, description
+const GALLERY = [
+  ['gallery-01.webp', 1600, 1200, 'The ICY community together in front of a whiteboard reading Happy 26th Anniversary'],
+  ['gallery-02.webp', 418, 313, 'Friends taking a selfie at the Jubilee Door of Grace'],
+  ['gallery-03.webp', 321, 313, 'Group holding up handmade cards'],
+  ['gallery-04.webp', 417, 313, 'Group selfie holding palm fronds'],
+  ['gallery-05.webp', 407, 302, 'Big group sitting together in a circle outdoors'],
+  ['gallery-06.webp', 526, 293, 'Group photo by the waterfront at night'],
+  ['gallery-07.webp', 390, 292, 'Group photo outdoors at dusk'],
+  ['gallery-08.webp', 417, 314, 'Sharing dinner at a long table'],
+  ['gallery-09.webp', 383, 682, 'Sitting in a circle on a carpet, playing a game'],
+  ['gallery-10.webp', 514, 290, 'Cell Group meeting on Zoom'],
+  ['gallery-11.webp', 395, 299, 'Group holding up handmade cards'],
+  ['gallery-12.webp', 407, 304, 'Playing cards around a table']
+];
+const GALLERY_ADDED = Date.UTC(2026, 10, 1);
+// the sheet's first dates, the run-up to the AY2026/27 Semester 1 exams; after that members set their own
+const EXAM_START = {
+  from: '2026-11-02', to: '2026-12-06', intercessors: {},
+  weeks: { '2026-11-02': 'Week 12', '2026-11-09': 'Week 13', '2026-11-16': 'Reading Week', '2026-11-23': 'Exam Week 1', '2026-11-30': 'Exam Week 2' }
+};
 
 // ---------- storage ----------
 // Records are held in memory and written through to the database or the data file.
 // Render's free plan wipes the disk whenever the service restarts, so it needs the database.
-const db = { cg: {}, events: {}, questions: {}, prayers: {}, files: {} }; // kind -> id -> record
+const db = { cg: {}, events: {}, questions: {}, prayers: {}, files: {}, gallery: {}, examRows: {}, examSheet: {} }; // kind -> id -> record
 const unsaved = new Set(); // 'kind/id' changed since the last write
 let pool = null, saveTimer = null, writes = Promise.resolve();
 
@@ -141,11 +163,34 @@ function publicQuestion(q) {
 function publicPrayer(p, client) {
   return { id: p.id, text: p.text, name: p.name, created: p.created, praying: p.praying.length, mine: Boolean(client) && p.praying.includes(sha(client).slice(0, 16)) };
 }
+function publicPhoto(g) {
+  return { id: g.id, src: g.asset ? '/assets/' + g.asset : '/api/files/' + g.image, w: g.w, h: g.h, alt: g.alt, by: g.by, created: g.created };
+}
+function seedGallery() { // a removed starting photo keeps its record, marked removed, so it doesn't come back on the next start
+  GALLERY.forEach(([asset, w, h, alt], i) => {
+    const id = String(i + 1).padStart(16, '0');
+    if (db.gallery[id]) return;
+    db.gallery[id] = { id, asset, w, h, alt, by: '', created: GALLERY_ADDED - i };
+    persist('gallery', id);
+  });
+}
+function examSheet() {
+  if (!db.examSheet.main) db.examSheet.main = structuredClone(EXAM_START);
+  return db.examSheet.main;
+}
+function setCell(cells, date, value) { // empty cells aren't stored
+  if (!realDate(date)) throw fail(400, 'date');
+  if (!value) delete cells[date];
+  else if (date in cells || Object.keys(cells).length < LIMIT.cells) cells[date] = value;
+  else throw fail(409, 'full');
+}
 function state(client) {
   const byNew = (a, b) => b.created - a.created;
   return {
     cg: Object.values(db.cg).map(publicCg),
     events: Object.values(db.events).map(publicEvent),
+    gallery: Object.values(db.gallery).filter((g) => !g.removed).sort(byNew).map(publicPhoto),
+    exams: Object.assign({}, examSheet(), { rows: Object.values(db.examRows).sort((a, b) => a.created - b.created) }),
     questions: Object.values(db.questions).sort(byNew).map(publicQuestion),
     prayers: Object.values(db.prayers).sort(byNew).map((p) => publicPrayer(p, client))
   };
@@ -247,7 +292,7 @@ async function handle(req, res) {
 
   let m = /^\/api\/files\/([a-f0-9]{16})$/.exec(p);
   if (m && method === 'GET') return sendFile(res, m[1]);
-  if (p === '/api/files' && method === 'POST') { // event pictures, attached to an event when it is saved
+  if (p === '/api/files' && method === 'POST') { // pictures, attached to an event or a gallery photo when that is saved
     const f = await readUpload(req, 'image', null);
     return send(res, 201, { file: fileMeta(f.id) });
   }
@@ -335,6 +380,73 @@ async function handle(req, res) {
       } else if (!o.on && i >= 0) e.joins.splice(i, 1);
       persist('events', e.id);
       return send(res, 200, { event: publicEvent(e) });
+    }
+    throw fail(404, 'not found');
+  }
+
+  // ---- gallery: anyone can add and remove photos ----
+  if (p === '/api/gallery' && method === 'POST') {
+    room('gallery');
+    const o = await readJson(req), f = db.files[String(o.image)];
+    if (!f || f.kind !== 'image' || f.owner) throw fail(400, 'image');
+    const size = (v) => Math.min(Math.max(Math.round(Number(v)) || 0, 0), 20000);
+    const g = { id: newId(), image: f.id, w: size(o.w), h: size(o.h), alt: '', by: f.by, created: Date.now() };
+    f.owner = 'gallery/' + g.id;
+    persist('files', f.id);
+    db.gallery[g.id] = g;
+    persist('gallery', g.id);
+    return send(res, 201, { photo: publicPhoto(g) });
+  }
+  if ((m = /^\/api\/gallery\/([a-f0-9]{16})$/.exec(p)) && method === 'DELETE') {
+    const g = db.gallery[m[1]];
+    if (!g || g.removed) throw fail(404, 'not found');
+    if (g.asset) g.removed = true;
+    else { dropFile(g.image); delete db.gallery[g.id]; }
+    persist('gallery', g.id);
+    return send(res, 200, { ok: true });
+  }
+
+  // ---- exam prayers: one sheet anyone can edit, saved a cell at a time so people on different cells never overwrite each other ----
+  if (p === '/api/exams/sheet' && method === 'POST') {
+    const o = await readJson(req), s = examSheet();
+    if ('from' in o) {
+      const days = (Date.parse(o.to) - Date.parse(o.from)) / 86400000;
+      if (!realDate(o.from) || !realDate(o.to) || !(days >= 0 && days < MAX_SHEET_DAYS)) throw fail(400, 'dates');
+      s.from = o.from;
+      s.to = o.to;
+    }
+    if ('week' in o) setCell(s.weeks, o.week, line(o.label, 40));
+    if ('day' in o) setCell(s.intercessors, o.day, line(o.name, 40));
+    persist('examSheet', 'main');
+    return send(res, 200, { sheet: s });
+  }
+  if (p === '/api/exams/rows' && method === 'POST') {
+    const name = line((await readJson(req)).name, 40);
+    if (!name) throw fail(400, 'name');
+    room('examRows');
+    const r = { id: newId(), name, cells: {}, created: Date.now() };
+    db.examRows[r.id] = r;
+    persist('examRows', r.id);
+    return send(res, 201, { row: r });
+  }
+  if ((m = /^\/api\/exams\/rows\/([a-f0-9]{16})$/.exec(p))) {
+    const r = db.examRows[m[1]];
+    if (!r) throw fail(404, 'not found');
+    if (method === 'PUT') {
+      const o = await readJson(req);
+      if ('name' in o) {
+        const name = line(o.name, 40);
+        if (!name) throw fail(400, 'name');
+        r.name = name;
+      }
+      if ('date' in o) setCell(r.cells, o.date, line(o.text, 120));
+      persist('examRows', r.id);
+      return send(res, 200, { row: r });
+    }
+    if (method === 'DELETE') {
+      delete db.examRows[r.id];
+      persist('examRows', r.id);
+      return send(res, 200, { ok: true });
     }
     throw fail(404, 'not found');
   }
@@ -428,6 +540,7 @@ async function start() {
     }
   }
   if (!pool) loadFile();
+  seedGallery();
   server.listen(PORT, HOST, () => {
     console.log('ICY NUS is running on port ' + PORT + (HOST === '127.0.0.1' ? ', this laptop only: http://localhost:' + PORT : ''));
     console.log(pool ? 'Everything is saved in the database.'
