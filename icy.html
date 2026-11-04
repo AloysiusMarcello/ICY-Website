@@ -112,6 +112,7 @@ svg{flex:none}
 .lt input,.lt textarea{width:100%;min-width:0;padding:10px 12px;border:1px solid var(--hair);border-radius:12px;background:#FAFAFC;color:var(--ink);font-size:14px}
 .lt textarea{resize:vertical;min-height:72px;line-height:1.5}
 .lt .lbl{color:var(--ink-3)}
+.lt .lbl .opt{color:var(--ink-3)}
 .check{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.4;color:var(--fg);cursor:pointer}
 .check input{width:20px;height:20px;margin:0;flex:none;accent-color:var(--lime)}
 .check:has(input:disabled){color:var(--dim);cursor:default}
@@ -371,6 +372,16 @@ button.mcell:hover{background:#F6F4FD}
 .pray:hover{background:#E4E1F1}
 .pray.on{background:var(--violet);color:#fff}
 .pray-count{font-size:13px;color:var(--ink-3)}
+.request{width:100%;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.req-card{background:#fff;border-radius:24px;padding:22px;color:var(--ink)}
+.req-note{margin:0;font-size:13px;line-height:1.45;color:var(--ink-3);text-align:center}
+.wall-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:12px;background:rgba(255,255,255,.6);color:var(--ink-2);font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}
+.wall-btn:hover{background:#fff}
+.request .wall-btn{align-self:center}
+.wall-lock{background:rgba(255,255,255,.55);border-radius:24px;padding:32px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;color:var(--ink)}
+.wall-lock strong{font-size:18px}
+.wall-lock .lbl{width:100%;max-width:320px;text-align:left}
+.wall-lock input{height:46px}
 
 /* ---------- dialog, popover, toast ---------- */
 dialog.dlg{width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:0;border:0;border-radius:24px;background:var(--panel);color:var(--fg);overflow:auto}
@@ -491,6 +502,7 @@ var ICON = {
   question: svg('<circle cx="10" cy="10" r="7"/><path d="M8 8a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.2v.5M10 14.2v.1"/>'),
   heart: svg('<path d="M10 16s-6-3.6-6-8a3.3 3.3 0 0 1 6-2 3.3 3.3 0 0 1 6 2c0 4.4-6 8-6 8z"/>'),
   anon: svg('<path d="M3 3l14 14M8.4 5.2A7.6 7.6 0 0 1 10 5c4.4 0 7 5 7 5a12.6 12.6 0 0 1-2.2 2.8M6 6.6C4 8 3 10 3 10s2.6 5 7 5a7 7 0 0 0 3.2-.8"/>'),
+  lock: svg('<rect x="4.5" y="9" width="11" height="8" rx="2"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9"/>'),
   send: svg('<path d="M3.5 10l13-6-4.5 13-2.5-5.5z"/>', 18),
   sun: svg('<circle cx="10" cy="10" r="3.4"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4"/>'),
   moon: svg('<path d="M16.5 11.8A7 7 0 0 1 8.2 3.5a7 7 0 1 0 8.3 8.3z"/>'),
@@ -534,13 +546,15 @@ var docFile = document.getElementById('doc-file'), picFile = document.getElement
 var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 var same = function (a, b) { return String(a).trim().toLowerCase() === String(b).trim().toLowerCase(); };
 
-/* ---------- this browser's own things: your name, keys to posts you made, a random id for "praying" ---------- */
+/* ---------- this browser's own things: your name, keys to posts you made, a random id for "praying", the prayer wall's key ---------- */
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 var postKeys = (function () { try { var o = JSON.parse(lsGet('icy.keys') || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } })();
 function keepKey(id, key) { postKeys[id] = key; lsSet('icy.keys', JSON.stringify(postKeys)); }
 var client = lsGet('icy.client');
 if (!client) { client = Math.random().toString(36).slice(2) + Date.now().toString(36); lsSet('icy.client', client); }
+var wallKey = lsGet('icy.wall') || '';
+function wallHeaders() { return wallKey ? { 'X-Prayer-Key': wallKey } : {}; }
 
 /* ---------- dates ---------- */
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
@@ -574,7 +588,7 @@ var S = {
   name: lsGet('icy.name') || '', theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
   sel: nextThursday(today), cal: { y: now.y, m: now.m }, calView: 'month', cgForm: null,
   evTab: 'upcoming', evForm: null, more: {},
-  draft: {}, replyOpen: {}, busy: {}, stale: false, sheetPlaced: false
+  draft: {}, replyOpen: {}, busy: {}, stale: false, sheetPlaced: false, wallView: false
 };
 var toastTimer = 0, lastJson = '', pollTimer = 0, popFor = null;
 
@@ -609,9 +623,11 @@ function api(method, url, body, headers) {
   });
 }
 function refresh(quiet) {
-  return fetch('/api/state?c=' + encodeURIComponent(client), { cache: 'no-store' })
+  var sentKey = wallKey;
+  return fetch('/api/state?c=' + encodeURIComponent(client), { cache: 'no-store', headers: wallHeaders() })
     .then(function (r) { if (!r.ok) throw new Error('status ' + r.status); return r.text(); })
     .then(function (txt) {
+      if (sentKey !== wallKey) return; // the wall was locked or unlocked while this was on its way
       var wasOff = S.offline, changed = txt !== lastJson;
       lastJson = txt;
       S.data = JSON.parse(txt);
@@ -1064,25 +1080,37 @@ function qCard(q) {
   '</article>';
 }
 function pagePrayer() {
-  return '<div class="cols">' +
-    '<aside class="side"><div class="panel pane sticky">' +
-      '<span class="kicker">Prayer Requests</span><h2>We’ll pray for you</h2>' +
-      '<p class="sub">Share what’s on your heart, big or small, and the ICY community will hold it in prayer.</p>' +
-      '<ul class="notes"><li>' + ICON.anon + '<span><strong>You can stay anonymous.</strong> Just leave your name blank.</span></li></ul>' +
-      '<form class="form" data-form="p">' +
-        '<label class="lbl">Your prayer request<textarea id="p-text" data-draft="p.text" maxlength="2000" rows="5" placeholder="Please pray for…">' + esc(draft('p.text')) + '</textarea></label>' +
-        '<label class="lbl"><span>Your name <span class="opt">(optional)</span></span><input id="p-name" data-draft="p.name" value="' + esc(draft('p.name')) + '" maxlength="40" placeholder="Leave blank to stay anonymous" autocomplete="name"></label>' +
-        '<button class="btn-lime" id="p-send"' + (S.busy.p ? ' disabled' : '') + '>' + ICON.heart + (S.busy.p ? ' Sharing…' : ' Share prayer request') + '</button>' +
-      '</form>' +
-    '</div></aside>' +
-    '<section class="main">' +
-      '<div class="title-wrap"><span class="eyebrow">Prayer wall</span><h1>Lift each other up</h1>' +
-      '<p class="sub-ink">Tap 🙏 when you pray for someone, so they know they’re not alone.</p></div>' +
-      (!S.loaded ? '<div class="empty">Loading prayer requests…</div>'
-        : S.data.prayers.length ? '<div class="feed">' + S.data.prayers.map(prayerCard).join('') + '</div>'
-        : '<div class="empty">No prayer requests yet. Share yours, and we’ll pray with you.</div>') +
-    '</section>' +
-  '</div>';
+  if (S.wallView) return pageWall();
+  return '<section class="main"><div class="request">' +
+    '<div class="title-wrap"><span class="eyebrow">Prayer Requests</span><h1>We’ll pray for you</h1>' +
+    '<p class="sub-ink">Share what’s on your heart, big or small, and the ICY community will hold it in prayer.</p></div>' +
+    '<form class="form req-card lt" data-form="p">' +
+      '<label class="lbl">Your prayer request<textarea id="p-text" data-draft="p.text" maxlength="2000" rows="6" placeholder="Please pray for…">' + esc(draft('p.text')) + '</textarea></label>' +
+      '<label class="lbl"><span>Your name <span class="opt">(optional)</span></span><input id="p-name" data-draft="p.name" value="' + esc(draft('p.name')) + '" maxlength="40" placeholder="Leave blank to stay anonymous" autocomplete="name"></label>' +
+      '<button class="btn-lime" id="p-send"' + (S.busy.p ? ' disabled' : '') + '>' + ICON.heart + (S.busy.p ? ' Submitting…' : ' Submit prayer request') + '</button>' +
+      '<p class="req-note">Only people with the password can read the prayer wall.</p>' +
+    '</form>' +
+    '<a class="wall-btn" href="#/prayer/wall">' + ICON.lock + 'View prayer wall</a>' +
+  '</div></section>';
+}
+function pageWall() {
+  var open = S.loaded ? S.data.wall : Boolean(wallKey);
+  return '<section class="main">' +
+    '<div class="head"><div class="title-wrap"><span class="eyebrow">Prayer wall</span><h1>Lift each other up</h1>' +
+      '<p class="sub-ink">' + (open ? 'Tap 🙏 when you pray for someone, so they know they’re not alone.' : 'Prayer requests are kept private. Enter the password to read them and pray along.') + '</p>' +
+      (open ? '<button class="link-btn" data-act="wall-lock">Lock the wall on this device</button>' : '') + '</div>' +
+      '<a class="wall-btn" href="#/prayer">' + ICON.heart + 'Submit a prayer request</a></div>' +
+    (!S.loaded ? '<div class="empty">Loading prayer requests…</div>'
+      : !S.data.wall ? wallForm()
+      : S.data.prayers.length ? '<div class="feed">' + S.data.prayers.map(prayerCard).join('') + '</div>'
+      : '<div class="empty">No prayer requests yet.</div>') +
+  '</section>';
+}
+function wallForm() {
+  return '<form class="wall-lock lt" data-form="wall">' + ICON.lock + '<strong>The prayer wall is locked</strong>' +
+    '<label class="lbl">Password<input id="wall-pass" type="password" data-draft="wall.pass" value="' + esc(draft('wall.pass')) + '" maxlength="100" autocomplete="current-password"></label>' +
+    '<button class="btn-black"' + (S.busy.wall ? ' disabled' : '') + '>' + (S.busy.wall ? 'Checking…' : 'Unlock') + '</button>' +
+  '</form>';
 }
 function prayerCard(p) {
   var n = p.praying;
@@ -1109,10 +1137,10 @@ function render() {
   if (fid && fid !== 'dlg' && fid !== 'lb') { var el = document.getElementById(fid); if (el && app.contains(el)) try { el.focus({ preventScroll: true }); } catch (e) {} }
 }
 function route() {
-  var h = location.hash.replace(/^#\/?/, '').split(/[/?]/)[0];
+  var parts = location.hash.replace(/^#\/?/, '').split(/[/?]/), h = parts[0];
   if (h === 'cg' || h === 'events') { location.replace('#/calendar'); return; } // the pages these links used to open
-  var page = PAGE_FN[h] ? h : 'home', changed = page !== S.page;
-  S.page = page;
+  var page = PAGE_FN[h] ? h : 'home', wall = page === 'prayer' && parts[1] === 'wall', changed = page !== S.page || wall !== S.wallView;
+  S.page = page; S.wallView = wall;
   if (changed) { S.cgForm = null; S.sheetPlaced = false; }
   document.title = (page === 'home' ? 'ICY NUS · Indonesian Catholic Youth' : PAGES.filter(function (p) { return p[0] === page; })[0][1] + ' · ICY NUS');
   render();
@@ -1357,7 +1385,8 @@ function sendPost(kind) { // kind is 'q' (question) or 'p' (prayer request)
   busy(kind, true); render();
   api('POST', kind === 'q' ? '/api/questions' : '/api/prayers', body).then(function (r) {
     keepKey(r.item.id, r.key);
-    put(kind === 'q' ? S.data.questions : S.data.prayers, r.item, true);
+    if (kind === 'q') put(S.data.questions, r.item, true);
+    else if (S.data.wall) put(S.data.prayers, r.item, true);
     S.draft[kind + '.text'] = ''; S.draft['q.dm'] = false;
     toast(kind === 'q' ? (name ? 'Thanks, ' + name + '! Your question was sent.' : 'Your question was sent anonymously.')
       : 'Thank you for sharing. We’re praying with you.');
@@ -1387,9 +1416,32 @@ function deleteReply(qid, rid) {
 function pray(id) {
   var p = find(S.data.prayers, id);
   if (!p) return;
-  api('POST', '/api/prayers/' + id + '/pray', { client: client, on: !p.mine }).then(function (r) {
+  api('POST', '/api/prayers/' + id + '/pray', { client: client, on: !p.mine }, wallHeaders()).then(function (r) {
     put(S.data.prayers, r.item); render(); if (r.item.mine) toast('Thank you for praying. 🙏');
-  }).catch(showErr);
+  }).catch(function (err) {
+    if (err.status !== 403) return showErr(err);
+    toast('The password has changed. Enter the new one to carry on.'); refresh(true);
+  });
+}
+function unlockWall() {
+  var password = String(draft('wall.pass')).trim();
+  if (!password) { toast('Type the password first.'); document.getElementById('wall-pass').focus(); return; }
+  busy('wall', true); render();
+  api('POST', '/api/prayers/unlock', { password: password }).then(function (r) {
+    wallKey = r.key; lsSet('icy.wall', wallKey);
+    S.draft['wall.pass'] = '';
+    return refresh();
+  }).catch(function (err) {
+    if (err.status === 403) toast('That password isn’t right.');
+    else if (err.status === 429) toast('Too many wrong tries. Please wait 15 minutes and try again.');
+    else if (err.status === 503) toast('The prayer wall’s password hasn’t been set up yet.');
+    else showErr(err);
+  }).then(function () { busy('wall', false); render(); });
+}
+function lockWall() {
+  wallKey = ''; lsSet('icy.wall', '');
+  S.data.wall = false; S.data.prayers = []; lastJson = '';
+  render();
 }
 
 /* who's going: a card that follows the hovered or tapped "going" button, like reactions in a chat */
@@ -1472,6 +1524,7 @@ document.addEventListener('click', function (e) {
     case 'r-close': S.replyOpen[id] = false; render(); break;
     case 'r-del': deleteReply(t.getAttribute('data-q'), id); break;
     case 'pray': pray(id); break;
+    case 'wall-lock': lockWall(); break;
   }
 });
 document.addEventListener('input', function (e) {
@@ -1497,6 +1550,7 @@ document.addEventListener('submit', function (e) {
   else if (k === 'ev') saveEvent();
   else if (k === 'ex-range') saveRange();
   else if (k === 'ex-add') addRow();
+  else if (k === 'wall') unlockWall();
   else if (k === 'name') {
     var v = document.getElementById('dlg-name').value.trim();
     if (!v) { document.getElementById('dlg-name').focus(); return; }

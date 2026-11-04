@@ -25,6 +25,9 @@ const DATE = /^\d{4}-\d{2}-\d{2}$/, TIME = /^([01]\d|2[0-3]):[0-5]\d$/, ID = /^[
 const COLORS = ['lime', 'lav', 'pink', 'sky', 'peach', 'mint'];
 const IMAGE = /^image\/(jpeg|png|webp|gif)$/;
 const MAX_SHEET_DAYS = 200;
+// The prayer wall opens only with this password. It's set on the host and never in the code, because the repository is public.
+const PRAYER_PASSWORD = process.env.PRAYER_PASSWORD || '';
+const WALL_TRIES = 20, WALL_TRIES_MS = 15 * 60000;
 // the photos the gallery starts with, kept in assets/: file, width, height, description
 const GALLERY = [
   ['gallery-01.webp', 1600, 1200, 'The ICY community together in front of a whiteboard reading Happy 26th Anniversary'],
@@ -141,6 +144,14 @@ function owns(rec, key) { // posts are removed only with the key handed back whe
   if (typeof key !== 'string' || !rec.keyHash) return false;
   return crypto.timingSafeEqual(Buffer.from(sha(key), 'hex'), Buffer.from(rec.keyHash, 'hex'));
 }
+const sameSecret = (a, b) => crypto.timingSafeEqual(Buffer.from(sha(a), 'hex'), Buffer.from(sha(b), 'hex'));
+// what a browser keeps once it has the password; changing the password locks every browser out again
+const wallKey = () => crypto.createHmac('sha256', PRAYER_PASSWORD).update('icy prayer wall').digest('hex');
+function wallOpen(req) {
+  const key = req.headers['x-prayer-key'];
+  return Boolean(PRAYER_PASSWORD && key) && sameSecret(key, wallKey());
+}
+const wallTries = { count: 0, since: 0 }; // wrong passwords from everyone together, since a visitor's address can be faked
 function room(kind) { if (Object.keys(db[kind]).length >= LIMIT[kind]) throw fail(409, 'full'); }
 
 function fileMeta(id) {
@@ -184,7 +195,7 @@ function setCell(cells, date, value) { // empty cells aren't stored
   else if (date in cells || Object.keys(cells).length < LIMIT.cells) cells[date] = value;
   else throw fail(409, 'full');
 }
-function state(client) {
+function state(client, wall) {
   const byNew = (a, b) => b.created - a.created;
   return {
     cg: Object.values(db.cg).map(publicCg),
@@ -192,7 +203,8 @@ function state(client) {
     gallery: Object.values(db.gallery).filter((g) => !g.removed).sort(byNew).map(publicPhoto),
     exams: Object.assign({}, examSheet(), { rows: Object.values(db.examRows).sort((a, b) => a.created - b.created) }),
     questions: Object.values(db.questions).sort(byNew).map(publicQuestion),
-    prayers: Object.values(db.prayers).sort(byNew).map((p) => publicPrayer(p, client))
+    wall,
+    prayers: wall ? Object.values(db.prayers).sort(byNew).map((p) => publicPrayer(p, client)) : []
   };
 }
 function eventFields(o, old) {
@@ -288,7 +300,7 @@ async function handle(req, res) {
       unsaved: unsaved.size, up: Math.round(process.uptime()), keepAwake: KEEP_AWAKE_URL ? awake : false
     });
   }
-  if (method === 'GET' && p === '/api/state') return send(res, 200, state(url.searchParams.get('c') || ''));
+  if (method === 'GET' && p === '/api/state') return send(res, 200, state(url.searchParams.get('c') || '', wallOpen(req)));
 
   let m = /^\/api\/files\/([a-f0-9]{16})$/.exec(p);
   if (m && method === 'GET') return sendFile(res, m[1]);
@@ -451,6 +463,16 @@ async function handle(req, res) {
     throw fail(404, 'not found');
   }
 
+  // ---- the prayer wall: anyone can send a request, but only someone with the password can read them ----
+  if (p === '/api/prayers/unlock' && method === 'POST') {
+    const password = String((await readJson(req)).password || '').trim();
+    if (!PRAYER_PASSWORD) throw fail(503, 'no password set');
+    if (Date.now() - wallTries.since > WALL_TRIES_MS) Object.assign(wallTries, { count: 0, since: Date.now() });
+    if (wallTries.count >= WALL_TRIES) throw fail(429, 'too many tries');
+    if (!sameSecret(password, PRAYER_PASSWORD)) { wallTries.count++; throw fail(403, 'wrong password'); }
+    return send(res, 200, { key: wallKey() });
+  }
+
   // ---- questions and prayer requests: names are optional, and only the poster can remove a post ----
   if ((p === '/api/questions' || p === '/api/prayers') && method === 'POST') {
     const kind = p.slice(5), o = await readJson(req), body = text(o.text, 2000);
@@ -492,6 +514,7 @@ async function handle(req, res) {
       return send(res, 200, { item: out() });
     }
     if (kind === 'prayers' && m[3] === 'pray' && !m[4] && method === 'POST') { // "I'm praying" is counted once per browser
+      if (!wallOpen(req)) throw fail(403, 'locked');
       const o = await readJson(req), client = line(o.client, 64);
       if (!client) throw fail(400, 'client');
       const h = sha(client).slice(0, 16), i = rec.praying.indexOf(h);
@@ -545,6 +568,7 @@ async function start() {
     console.log('ICY NUS is running on port ' + PORT + (HOST === '127.0.0.1' ? ', this laptop only: http://localhost:' + PORT : ''));
     console.log(pool ? 'Everything is saved in the database.'
       : 'Everything is saved in ' + DATA_DIR + (ON_RENDER && !process.env.DATA_DIR ? ' (temporary: this host wipes it on restart)' : ''));
+    if (!PRAYER_PASSWORD) console.log('PRAYER_PASSWORD is not set, so nobody can open the prayer wall.');
     if (KEEP_AWAKE_URL) console.log('Keeping awake by requesting ' + KEEP_AWAKE_URL + ' every ' + KEEP_AWAKE_MS / 60000 + ' minutes.');
     keepAwake();
   });
