@@ -1,4 +1,6 @@
-# Render Blueprint for ICY NUS: a free web service running server.js, in Singapore to be near NUS.
+# Render Blueprint for ICY NUS: a web service running server.js, in Singapore to be near NUS. It is on the
+# cheapest paid plan ($7 a month), which never sleeps: free services share 750 hours a month per workspace,
+# and ICY and Overlap kept awake together used them up by mid-month.
 # Data lives in a free Neon Postgres database rather than a Render one: Render allows one free database per
 # workspace (Overlap has it) and deletes free databases 30 days after creation. Render asks for the Neon
 # connection string as DATABASE_URL when the Blueprint is created; without it, data is wiped on every restart.
@@ -9,7 +11,7 @@ services:
     name: icy-nus
     runtime: node
     region: singapore
-    plan: free
+    plan: 0.5c-512mb
     branch: main
     buildCommand: npm install
     startCommand: node server.js
